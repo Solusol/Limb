@@ -1117,3 +1117,20 @@ footer a {
 
   pointer-events: none;
 }
+/* ===== Таймлайн ===== */
+#timeline h2{text-align:center;font-size:var(--subtitle);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--s16)}
+.tl-board{background:url("assets/timeline/taimline.png") center/100% 100% no-repeat;padding:clamp(28px,7vw,90px) clamp(20px,7vw,80px);display:grid;gap:clamp(28px,6vw,64px)}
+.tl-card{background:url("assets/timeline/taimline-data.png") center/100% 100% no-repeat;padding:clamp(20px,4vw,40px) clamp(20px,4vw,44px);color:#1d1b17}
+.tl-card h3{font-size:clamp(1.6rem,1rem + 2vw,3rem);text-transform:uppercase;letter-spacing:.15em;margin-bottom:clamp(12px,2vw,20px);font-weight:400;color:#1d1b17}
+.tl-fields{display:flex;flex-wrap:wrap;gap:clamp(10px,2vw,28px)}
+.tl-field{position:relative;display:grid;place-items:center;height:clamp(64px,8vw,96px)}
+.tl-field.s{width:clamp(96px,14vw,150px);background:url("assets/timeline/taimline-den-mesyats.png") center/100% 100% no-repeat}
+.tl-field.l{width:clamp(170px,27vw,300px);background:url("assets/timeline/taimline-god.png") center/100% 100% no-repeat}
+.tl-field input,.tl-field output{width:100%;height:100%;border:0;background:transparent;text-align:center;font:inherit;font-size:clamp(1.6rem,1rem + 2.2vw,3rem);color:#1d1b17;letter-spacing:.08em;outline:none;-moz-appearance:textfield;display:grid;place-items:center;caret-color:var(--heading)}
+.tl-field input::-webkit-outer-spin-button,.tl-field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#timeline .tl-field input{color:var(--heading);transition:color .18s ease}
+#timeline .tl-field:hover input,#timeline .tl-field input:focus{color:var(--tl-hover,#5f7a4a)}
+#timeline .tl-field input::selection{background:var(--tl-hover,#5f7a4a);color:#e4dfcd}
+.tl-field small{position:absolute;bottom:-1.6em;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:#6b6456}
+.tl-card.limb output{color:var(--rust)}
+.tl-note{min-height:1.5em;margin-top:28px;font-size:var(--sm);color:var(--rust)}

@@ -145,7 +145,7 @@
   $("#bible-menu").append(
     menuItem("Миросоздание", "#bible/origin"),
     menuItem("Мироустройство", "#bible/rules"),
-    menuItem("Таймлайн", "", true)
+    menuItem("Таймлайн", "#bible/timeline")
   );
 
   $("#maps-menu").append(
@@ -645,7 +645,7 @@ $("#person-next").addEventListener("click", () => goToPerson(1));
   }
 
   const pages = [
-    "home", "bible", "origin", "rules", "maps",
+    "home", "bible", "origin", "rules", "timeline", "maps",
     "map-view", "house", "characters", "character",
     "readers", "materials"
   ];
@@ -656,9 +656,10 @@ $("#person-next").addEventListener("click", () => goToPerson(1));
     let mapMode = null;
 
     if (parts[0] === "bible") {
-      page = parts[1] === "origin"
-        ? "origin"
-        : parts[1] === "rules" ? "rules" : "bible";
+      page = parts[1] === "origin" ? "origin"
+: parts[1] === "rules" ? "rules"
+: parts[1] === "timeline" ? "timeline"
+: "bible";
     } else if (parts[0] === "maps") {
       if (parts[1] === "house") {
         page = "house";
@@ -697,7 +698,7 @@ $("#person-next").addEventListener("click", () => goToPerson(1));
     // Карта Лимба теперь управляется блоком из fixes.js
 
     const currentSection =
-      ["bible", "origin", "rules"].includes(page) ? "#bible" :
+      ["bible", "origin", "rules", "timeline"].includes(page) ? "#bible" :
       ["maps", "map-view", "house"].includes(page) ? "#maps" :
       ["characters", "character"].includes(page) ? "#characters" :
       "";
