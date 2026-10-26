@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1440">
+  <meta name="color-scheme" content="dark">
+  <title>Лимб</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./content.js" defer></script>
+  <script src="./app.js" defer></script>
+  <script src="./fixes.js" defer></script>
+  <script src="./fixes-2.js" defer></script>
+  <link rel="stylesheet" href="./effects.css">
+  <link rel="stylesheet" href="./effects-extra.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+
+  <header class="site-header">
+    <a class="home-link" href="#home">На главную</a>
+
+    <nav aria-label="Основное меню">
+      <a href="#bible">Библия</a>
+      <a href="#maps">Карта</a>
+      <a href="#characters">Персонажи</a>
+    </nav>
+
+    <div class="external-links">
+      <a id="ficbook-link" target="_blank" rel="noopener noreferrer">
+        <img class="hand-icon" data-ui="hand"
+             alt="" width="48" height="32" loading="lazy">
+        <span>Фикбук</span>
+      </a>
+      <a id="tiktok-link" target="_blank" rel="noopener noreferrer">
+        <img class="hand-icon" data-ui="hand"
+             alt="" width="48" height="32" loading="lazy">
+        <span>TikTok</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section id="home" class="page home-page"
+             aria-labelledby="home-title">
+      <div class="home-heading">
+        <h1 id="home-title">LIMB</h1>
+        <p>* от лат. limbus — рубеж, предел, граница</p>
+      </div>
+
+      <img class="hero-creature" data-art="creature"
+           alt="" width="1200" height="500"
+           loading="eager" decoding="async">
+
+      <section class="paper-section" aria-label="О мире и метки">
+        <div class="paper-content">
+          <ul class="tags" id="tags" aria-label="Метки"></ul>
+          <div class="annotation" id="annotation"></div>
+        </div>
+      </section>
+
+      <nav class="section-cards" id="section-cards"
+           aria-label="Разделы сайта"></nav>
+
+      <section id="cover-section" class="cover-section" hidden
+               aria-label="Обложки">
+        <h2>Обложки</h2>
+        <div id="cover-image"></div>
+        <div class="cover-controls">
+          <button id="cover-prev" class="image-button"
+                  aria-label="Предыдущая обложка">
+            <img data-ui="previous" alt=""
+                 width="160" height="64" loading="lazy">
+          </button>
+          <span id="cover-counter" aria-live="polite"></span>
+          <button id="cover-next" class="image-button"
+                  aria-label="Следующая обложка">
+            <img data-ui="next" alt=""
+                 width="160" height="64" loading="lazy">
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <section id="bible" class="page inner-page" hidden>
+      <h1>Библия</h1>
+      <nav class="outline-menu" id="bible-menu"
+           aria-label="Разделы Библии"></nav>
+    </section>
+
+    <section id="origin" class="page article-page" hidden>
+      <h1>Библия</h1>
+      <h2>Миросоздание</h2>
+      <ul class="text-panel" id="origin-list"></ul>
+      <img class="article-art" data-art="powerPlant"
+           alt="" width="1200" height="600"
+           loading="lazy" decoding="async">
+    </section>
+
+    <section id="rules" class="page article-page" hidden>
+      <h1>Библия</h1>
+      <h2>Мироустройство</h2>
+      <ul class="text-panel" id="rules-list"></ul>
+      <img class="article-art" data-art="creature"
+           alt="" width="1200" height="500"
+           loading="lazy" decoding="async">
+    </section>
+
+    <section id="maps" class="page inner-page" hidden>
+      <h1>Карта</h1>
+      <nav class="outline-menu" id="maps-menu"
+           aria-label="Выбор карты"></nav>
+    </section>
+
+    <section id="map-view" class="page map-page" hidden>
+      <h1 id="map-title">Карта Лимба</h1>
+
+      <div class="map-controls">
+        <button id="map-plus" class="image-button compact"
+                aria-label="Приблизить карту">
+          <img data-ui="zoomIn" alt=""
+               width="48" height="48" loading="lazy">
+        </button>
+
+        <button id="map-minus" class="image-button compact"
+                aria-label="Отдалить карту">
+          <img data-ui="zoomOut" alt=""
+               width="48" height="48" loading="lazy">
+        </button>
+
+        <button id="map-reset" class="image-button"
+                aria-label="Показать всю карту">
+          <img data-ui="reset" alt=""
+               width="160" height="64" loading="lazy">
+        </button>
+
+        <label id="chapter-control" hidden>
+          <span class="sr-only">Выбрать карту главы</span>
+          <select id="chapter-select"></select>
+        </label>
+
+        <span id="map-scale" aria-live="polite">100%</span>
+      </div>
+
+      <div class="map-viewport" id="map-viewport" tabindex="0"
+           aria-label="Карта. Масштаб меняется кнопками.
+           Увеличенную карту можно перемещать перетаскиванием
+           или стрелками клавиатуры.">
+        <div class="map-layer" id="map-layer">
+          <img id="map-image" alt=""
+               width="1200" height="1000"
+               loading="eager" decoding="async" draggable="false">
+        </div>
+        <p id="map-error" class="asset-error" hidden></p>
+      </div>
+
+      <p id="map-note" class="map-note"></p>
+    </section>
+
+    <section id="house" class="page house-page" hidden>
+      <h1>Карта Дома</h1>
+      <img id="house-image"
+           alt="Схема Дома: этажи, помещения и расселение"
+           width="1340" height="857"
+           loading="lazy" decoding="async">
+    </section>
+
+    <section id="characters" class="page gallery-page" hidden>
+      <h1>Персонажи</h1>
+      <div class="characters-grid" id="characters-grid"></div>
+    </section>
+
+    <section id="character" class="page character-page" hidden>
+      <h1>Персонажи</h1>
+      <h2 id="character-name" class="sr-only"></h2>
+
+      <figure class="character-sheet" id="character-sheet"></figure>
+
+      <div class="character-pager">
+        <button id="person-prev" class="image-button"
+                aria-label="Предыдущее представление персонажа">
+          <img data-ui="previous" alt=""
+               width="160" height="64" loading="lazy">
+        </button>
+
+        <div class="view-dots" role="group"
+             aria-label="Профайл или мудборд">
+          <button data-person-view="profile"
+                  aria-label="Профайл" aria-pressed="true">
+            <img alt="" width="40" height="40" loading="lazy">
+          </button>
+          <button data-person-view="mood"
+                  aria-label="Мудборд" aria-pressed="false">
+            <img alt="" width="40" height="40" loading="lazy">
+          </button>
+        </div>
+
+        <button id="person-next" class="image-button"
+                aria-label="Следующее представление персонажа">
+          <img data-ui="next" alt=""
+               width="160" height="64" loading="lazy">
+        </button>
+      </div>
+
+      <a class="back-link" href="#characters">Все персонажи</a>
+    </section>
+
+    <section id="readers" class="page inner-page" hidden>
+      <h1>Для читателей</h1>
+      <div id="reader-materials"></div>
+    </section>
+
+    <section id="materials" class="page inner-page" hidden>
+      <h1>Материалы</h1>
+      <p>Проверка файлов, используемых этой версией сайта.</p>
+      <button id="check-assets" class="text-button">
+        Проверить файлы
+      </button>
+      <p id="asset-summary" role="status"></p>
+      <div id="asset-results"></div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="#readers">Для читателей</a>
+    <a href="#materials">Проверка файлов</a>
+  </footer>
+
+  <noscript>
+    Для переключения страниц и работы карты нужен JavaScript.
+  </noscript>
+</body>
+</html>
