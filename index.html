@@ -12,6 +12,7 @@
   <script src="./fixes.js" defer></script>
   <script src="./fixes-2.js" defer></script>
   <script src="./timeline.js" defer></script>
+  <script src="./hints.js" defer></script>
   <link rel="stylesheet" href="./effects.css">
   <link rel="stylesheet" href="./effects-extra.css">
 </head>
@@ -115,21 +116,24 @@
         <section class="tl-card">
           <h3>Дата в реальности</h3>
           <div class="tl-fields">
-            <label class="tl-field s"><input id="rD" type="number" inputmode="numeric" min="1" max="31" value="09" aria-label="День в реальности"><small>день</small></label>
-            <label class="tl-field s"><input id="rM" type="number" inputmode="numeric" min="1" max="12" value="02" aria-label="Месяц в реальности"><small>месяц</small></label>
-            <label class="tl-field l"><input id="rY" type="number" inputmode="numeric" min="2020" max="9999" value="2020" aria-label="Год в реальности"><small>год</small></label>
+            <label class="tl-field s"><input id="rD" type="text" inputmode="numeric" maxlength="2" aria-label="День в реальности"><small>день</small></label>
+            <label class="tl-field s"><input id="rM" type="text" inputmode="numeric" maxlength="2" aria-label="Месяц в реальности"><small>месяц</small></label>
+            <label class="tl-field l"><input id="rY" type="text" inputmode="numeric" maxlength="4" aria-label="Год в реальности"><small>год</small></label>
           </div>
-          <p class="tl-note" id="tlNote" aria-live="polite"></p>
         </section>
-        <section class="tl-card limb" aria-live="polite">
+
+        <img class="tl-hint" src="assets/decor/podskazka-timeline.png" alt="" aria-hidden="true" decoding="async">
+
+        <section class="tl-card">
           <h3>Дата в Лимбе</h3>
           <div class="tl-fields">
-            <div class="tl-field s"><output id="lD">01</output><small>день</small></div>
-            <div class="tl-field s"><output id="lM">01</output><small>месяц</small></div>
-            <div class="tl-field l"><output id="lY">0001</output><small>год</small></div>
+            <label class="tl-field s"><input id="lD" type="text" inputmode="numeric" maxlength="2" aria-label="День в Лимбе"><small>день</small></label>
+            <label class="tl-field s"><input id="lM" type="text" inputmode="numeric" maxlength="2" aria-label="Месяц в Лимбе"><small>месяц</small></label>
+            <label class="tl-field l"><input id="lY" type="text" inputmode="numeric" maxlength="4" aria-label="Год в Лимбе"><small>год</small></label>
           </div>
         </section>
       </div>
+      <p class="tl-note" id="tlNote" aria-live="polite"></p>
     </section>
 
     <section id="maps" class="page inner-page" hidden>
