@@ -15,7 +15,7 @@
           <label class="tl-field l"><input id="rY" type="text" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Год в реальности"><small>год</small></label>
         </div>
       </section>
-      <img class="tl-hint" src="assets/decor/podskazka-timeline.png" alt="" aria-hidden="true" decoding="async">
+      <img class="tl-hint" src="assets/decor/podskazka-timeline.webp" alt="" aria-hidden="true" decoding="async">
       <section class="tl-card">
         <h3>Дата в Лимбе</h3>
         <div class="tl-fields">

@@ -1,4 +1,4 @@
-/* Лимб: зелёные ховеры. Файл размещается рядом с limb.html. */
+/* Лимб: зелёные ховеры. Файл размещается рядом с index.html. */
 :root {
  --limb-hover: #5d6444;
  --limb-focus: #5d6444;
@@ -46,16 +46,16 @@ button[data-zoom] img {
   filter: drop-shadow(0 0 6px rgb(93 100 68 / 55%));
   scale: 1.045;
  }
- /* Готовые PNG: сохраняем их исходные цвета. src и логику карты не меняем. */
+ /* Готовые картинки: сохраняем их исходные цвета. src и логику карты не меняем. */
  .lm-zoom button[data-zoom="in"]:not(:disabled):hover img {
-  content: url("./assets/buttons/zoom-in-hover.png");
+  content: url("./assets/buttons/zoom-in-hover.webp");
  }
  .lm-zoom button[data-zoom="out"]:not(:disabled):hover img {
-  content: url("./assets/buttons/zoom-out-hover.png");
+  content: url("./assets/buttons/zoom-out-hover.webp");
  }
  /* Отдельное состояние только для уже выбранной первой главы. */
  .lm-chapter[data-chapter="1"][aria-pressed="true"]:not(:disabled):hover img {
-  content: url("./assets/buttons/glava1-active-hover.png");
+  content: url("./assets/buttons/glava1-active-hover.webp");
  }
  .menu-row:not(:disabled):not([aria-disabled="true"]) .hand-icon {
   transition: translate var(--limb-duration) ease;

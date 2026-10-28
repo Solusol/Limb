@@ -16,43 +16,43 @@ window.LIMB = {
   },
 
   art: {
-    backgroundMain: "assets/backgrounds/main-dark.png",
-    backgroundCharacter: "assets/backgrounds/characters-dark.png",
+    backgroundMain: "assets/backgrounds/main-dark.webp",
+    backgroundCharacter: "assets/backgrounds/characters-dark.webp",
 
-    creature: "assets/decor/creature.png",
-    powerPlant: "assets/decor/power-plant.png",
-    paper: "assets/decor/paper-sheet.png",
-    paperDecoration: "assets/decor/paper-decoration.png",
-    tape: "assets/decor/duct-tape.png",
+    creature: "assets/decor/creature.webp",
+    powerPlant: "assets/decor/power-plant.webp",
+    paper: "assets/decor/paper-sheet.webp",
+    paperDecoration: "assets/decor/paper-decoration.webp",
+    tape: "assets/decor/duct-tape.webp",
 
-    bibleCard: "assets/sections/bible.png",
-    mapCard: "assets/sections/map.png",
-    charactersCard: "assets/sections/characters.png"
+    bibleCard: "assets/sections/bible.webp",
+    mapCard: "assets/sections/map.webp",
+    charactersCard: "assets/sections/characters.webp"
   },
 
   ui: {
-    hand: "assets/icons/pointing-hand.png",
-    activeDot: "assets/icons/dot-active.png",
-    inactiveDot: "assets/icons/dot-inactive.png",
+    hand: "assets/icons/pointing-hand-active.webp",
+    activeDot: "assets/icons/dot-active.webp",
+    inactiveDot: "assets/icons/dot-inactive.webp",
 
-    open: "assets/buttons/open.png",
-    previous: "assets/buttons/previous.png",
-    next: "assets/buttons/next.png",
-    zoomIn: "assets/buttons/zoom-in.png",
-    zoomOut: "assets/buttons/zoom-out.png",
-    reset: "assets/buttons/reset.png"
+    open: "assets/buttons/open.webp",
+    previous: "assets/buttons/previous.webp",
+    next: "assets/buttons/next.webp",
+    zoomIn: "assets/buttons/zoom-in.webp",
+    zoomOut: "assets/buttons/zoom-out.webp",
+    reset: "assets/buttons/reset.webp"
   },
 
   frames: {
-    menu: "assets/frames/menu-row.png",
-    article: "assets/frames/article-panel.png",
-    portrait: "assets/frames/portrait.png",
-    character: "assets/frames/character-sheet.png"
+    menu: "assets/frames/menu-row.webp",
+    article: "assets/frames/article-panel.webp",
+    portrait: "assets/frames/portrait.webp",
+    character: "assets/frames/character-sheet.webp"
   },
 
   /*
-    false: рамка уже включена в PNG.
-    true: наложить отдельную прозрачную PNG-рамку.
+    false: рамка уже включена в изображение.
+    true: наложить отдельную прозрачную рамку.
 
     Не включай true для изображения, уже содержащего рамку.
   */
@@ -94,15 +94,11 @@ window.LIMB = {
     "в то же место."
   ],
 
-  /*
-    Сохранено как дополнительная функция первоначального задания.
-    На присланном макете главной отдельная карусель не показана.
-  */
   showCoverCarousel: false,
 
   covers: [
     {
-      file: "assets/covers/Oblozhka_1.png",
+      file: "assets/covers/Oblozhka_1.webp",
       title: "Обложка Лимба"
     }
   ],
@@ -110,40 +106,40 @@ window.LIMB = {
   maps: {
     limb: {
       title: "Карта Лимба",
-      file: "assets/maps/Karta.svg"
+      file: "assets/maps/Karta.webp"
     },
 
     house: {
       title: "Карта Дома",
-      file: "assets/maps/Skhema-doma-snaruzhi.svg"
+      file: "assets/maps/Skhema-doma-snaruzhi.webp"
     },
 
     chapters: {
       title: "Карта по главам",
-      file: "assets/maps/Karta-po-glavam.svg"
+      file: "assets/maps/Karta-po-glavam.webp"
     }
   },
 
   /*
     Необязательно.
 
-    Если есть отдельные готовые SVG по главам, перечисли их здесь.
+    Если есть отдельные готовые карты по главам, перечисли их здесь.
     Каждый объект:
       id: уникальная строка;
       title: подпись выбора;
-      file: путь к существующему SVG;
+      file: путь к существующему файлу;
       note: пояснение, если нужно.
 
     Пример синтаксиса — не обязательный файл:
     {
       id: "chapter-01",
       title: "Глава 1",
-      file: "assets/maps/chapters/chapter-01.svg",
+      file: "assets/maps/chapters/chapter-01.webp",
       note: ""
     }
 
     Пустой массив означает, что доступна только общая карта
-    Karta-po-glavam.svg с уже нанесёнными маршрутами.
+    Karta-po-glavam.webp с уже нанесёнными маршрутами.
   */
   chapterMaps: [],
 

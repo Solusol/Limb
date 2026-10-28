@@ -4,9 +4,9 @@
   const D = window.LIMB || {};
 
   const PATHS = {
-    paper: D.art?.paper || "assets/decor/paper-sheet.png",
-    frame: "assets/frames/article-panel.png",
-    open: "assets/buttons/open.png"
+    paper: D.art?.paper || "assets/decor/paper-sheet.webp",
+    frame: "assets/frames/article-panel.webp",
+    open: "assets/buttons/open.webp"
   };
 
   /* ---------- Стили ---------- */
@@ -167,7 +167,7 @@
     paper.prepend(art);
   }
 
-  /* ---------- Рука → open.png в карточках разделов ---------- */
+  /* ---------- Рука → open.webp в карточках разделов ---------- */
 
   document
     .querySelectorAll("#home .section-cards .hand-open-link")

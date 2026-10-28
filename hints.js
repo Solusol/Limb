@@ -26,8 +26,8 @@
     return img;
   };
 
-  const tuda = make("hint-tuda", "assets/decor/podskazka-tuda-suda.png");
-  const mud  = make("hint-mudbord", "assets/decor/podskazka-mudbord.png");
+  const tuda = make("hint-tuda", "assets/decor/podskazka-tuda-suda.webp");
+  const mud  = make("hint-mudbord", "assets/decor/podskazka-mudbord.webp");
 
   const target = btn => btn.querySelector("img:not(.hint)") || btn;
 

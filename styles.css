@@ -2,7 +2,7 @@
   Лимб / исправленная версия.
   Только тёмная тема.
   Beer Money — во всех текстовых элементах.
-  PNG — растровая графика. SVG — карты.
+  WebP — вся графика, включая карты.
 */
 
 @font-face {
@@ -838,13 +838,10 @@ footer a {
     scroll-behavior: auto !important;
   }
 }
+
 /* МИРОСОЗДАНИЕ: полноширинный коллаж позади текстовой плашки */
 
 #origin.page {
-  /*
-   * Насколько верх картинки заходит под плашку.
-   * Больше значение — сильнее перекрытие.
-   */
   --origin-art-overlap: clamp(160px, 40vw, 900px);
 
   position: relative;
@@ -858,16 +855,11 @@ footer a {
   padding-bottom: 0;
 }
 
-/* Заголовки сохраняют небольшие боковые отступы */
 #origin > h1,
 #origin > h2 {
   padding-inline: 16px;
 }
 
-/*
- * Текстовая плашка — передний план.
- * Подложка применяется только к миросозданию.
- */
 #origin #origin-list {
   position: relative;
   z-index: 2;
@@ -879,8 +871,7 @@ footer a {
   margin-bottom: 0;
 
   background-color: transparent !important;
-  background-image:
-    url("./assets/frames/mirosozdanie.png") !important;
+  background-image: url("./assets/frames/mirosozdanie.webp") !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-size: 100% 100% !important;
@@ -889,10 +880,6 @@ footer a {
   box-shadow: none;
 }
 
-/*
- * Промышленный коллаж — задний план.
- * Остаётся в потоке страницы, но поднимается под плашку.
- */
 #origin > img.article-art {
   position: relative;
   z-index: 1;
@@ -916,7 +903,6 @@ footer a {
   transform: none;
 }
 
-/* Мобильная версия */
 @media (max-width: 700px) {
   #origin.page {
     --origin-art-overlap: clamp(100px, 38vw, 266px);
@@ -926,10 +912,10 @@ footer a {
     width: 92%;
   }
 }
+
 /* МИРОУСТРОЙСТВО: картинка внизу на всю ширину, под плашкой */
 
 #rules.page {
-  /* Насколько верх картинки заходит под плашку */
   --rules-art-overlap: clamp(60px, 3vw, 260px);
 
   position: relative;
@@ -947,7 +933,6 @@ footer a {
   padding-inline: 16px;
 }
 
-/* Текстовая плашка — передний план */
 #rules #rules-list {
   position: relative;
   z-index: 2;
@@ -958,7 +943,7 @@ footer a {
   margin-bottom: 0;
 
   background-color: transparent !important;
-  background-image: url("./assets/frames/mirosozdanie.png") !important;
+  background-image: url("./assets/frames/mirosozdanie.webp") !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-size: 100% 100% !important;
@@ -967,7 +952,6 @@ footer a {
   box-shadow: none;
 }
 
-/* Существо — задний план, на всю ширину экрана */
 #rules > img.article-art {
   position: relative;
   z-index: 1;
@@ -998,10 +982,10 @@ footer a {
     width: 92%;
   }
 }
+
 /* КАРТА ЛИМБА — ограничение размеров страницы */
 
 #map-view {
-  /* Размер всего блока карты. Меньше число — меньше блок */
   width: min(1100px, calc(100% - 48px)) !important;
   max-width: none !important;
 
@@ -1010,7 +994,6 @@ footer a {
   box-sizing: border-box;
 }
 
-/* Колонки не расширяются под натуральный размер картинок */
 #map-view .lm-layout {
   grid-template-columns:
     minmax(0, 1fr)
@@ -1026,7 +1009,6 @@ footer a {
   min-width: 0;
 }
 
-/* Рамка и карта всегда одного размера */
 #map-view .lm-map-box {
   width: 100%;
   height: auto;
@@ -1037,7 +1019,6 @@ footer a {
   object-fit: fill !important;
 }
 
-/* Кнопки глав — по ширине колонки */
 #map-view .lm-chapters {
   max-height: none !important;
 }
@@ -1058,26 +1039,21 @@ footer a {
     grid-template-columns: minmax(0, 1fr) !important;
   }
 }
+
 /* СТРАНИЦА ПЕРСОНАЖА */
 
 #character .back-link {
   display: none !important;
 }
 
-/* Страница не расширяется из-за рамки */
 #character.page {
   overflow-x: clip;
 }
 
 #character .character-sheet {
-  /*
-   * Насколько рамка больше картинки.
-   * 1.06 = на 6% больше. Больше значение — рамка крупнее.
-   */
   --frame-scale-x: 1.06;
   --frame-scale-y: 1.05;
 
-  /* Ширина картинки на странице */
   width: min(90%, 1100px);
 
   display: grid;
@@ -1088,7 +1064,6 @@ footer a {
   isolation: isolate;
 }
 
-/* Картинка и рамка в одной ячейке */
 #character .character-sheet > * {
   grid-area: 1 / 1;
 }
@@ -1117,16 +1092,17 @@ footer a {
 
   pointer-events: none;
 }
+
 /* ===== Таймлайн ===== */
 #timeline{--tl-hover:#5f7a4a}
 #timeline h2{text-align:center;font-size:var(--subtitle);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--s16)}
-.tl-board{background:url("assets/timeline/taimline.png") center/100% 100% no-repeat;padding:clamp(28px,7vw,90px) clamp(20px,7vw,80px);display:grid;gap:clamp(16px,2vw,28px)}
-.tl-card{background:url("assets/timeline/taimline-data.png") center/100% 100% no-repeat;padding:clamp(20px,4vw,40px) clamp(20px,4vw,44px);color:#1d1b17}
+.tl-board{background:url("assets/timeline/taimline.webp") center/100% 100% no-repeat;padding:clamp(28px,7vw,90px) clamp(20px,7vw,80px);display:grid;gap:clamp(16px,2vw,28px)}
+.tl-card{background:url("assets/timeline/taimline-data.webp") center/100% 100% no-repeat;padding:clamp(20px,4vw,40px) clamp(20px,4vw,44px);color:#1d1b17}
 .tl-card h3{font-size:clamp(1.6rem,1rem + 2vw,3rem);text-transform:uppercase;letter-spacing:.15em;margin-bottom:clamp(12px,2vw,20px);font-weight:400;color:#1d1b17}
 .tl-fields{display:flex;flex-wrap:nowrap;gap:clamp(10px,2vw,28px)}
 .tl-field{position:relative;display:grid;place-items:center;height:clamp(64px,8vw,96px);cursor:text}
-.tl-field.s{width:clamp(96px,14vw,150px);background:url("assets/timeline/taimline-den-mesyats.png") center/100% 100% no-repeat}
-.tl-field.l{width:clamp(170px,27vw,300px);background:url("assets/timeline/taimline-god.png") center/100% 100% no-repeat}
+.tl-field.s{width:clamp(96px,14vw,150px);background:url("assets/timeline/taimline-den-mesyats.webp") center/100% 100% no-repeat}
+.tl-field.l{width:clamp(170px,27vw,300px);background:url("assets/timeline/taimline-god.webp") center/100% 100% no-repeat}
 .tl-field input{width:100%;height:100%;border:0;background:transparent;text-align:center;font:inherit;font-size:clamp(1.6rem,1rem + 2.2vw,3rem);letter-spacing:.08em;outline:none;color:var(--heading);caret-color:var(--tl-hover);transition:color .18s ease}
 .tl-field:hover input,.tl-field input:focus{color:var(--tl-hover)}
 .tl-field input::selection{background:transparent;color:var(--tl-hover)}
@@ -1135,7 +1111,6 @@ footer a {
 .tl-hint{display:block;width:clamp(180px,24vw,300px);height:auto;margin:0 0 0 clamp(8px,2vw,24px);pointer-events:none;user-select:none}
 .tl-note{min-height:1.5em;margin-top:var(--s6);text-align:center;font-size:var(--sm);color:var(--heading)}
 
-/* ===== Подсказки в профайлах ===== */
 /* ===== Подсказки в профайлах ===== */
 #character .character-pager{position:relative;overflow:visible;margin-bottom:clamp(90px,10vw,220px)}
 #character .character-pager > .hint{position:absolute !important;right:auto !important;bottom:auto !important;height:auto !important;max-width:none !important;margin:0 !important;pointer-events:none;user-select:none}
@@ -1175,6 +1150,7 @@ html.is-touch .tl-field input{font-size:calc(3rem * 1.45) !important}
 html.is-touch .tl-hint{width:calc(300px * 1.45) !important}
 
 #timeline .tl-note{color:var(--text,#e4dfcd) !important;font-size:calc(var(--sm) * 1.2) !important;letter-spacing:.04em}
+
 /* ===== Миросоздание и Мироустройство: картинка до низа экрана ===== */
 body[data-page="origin"],
 body[data-page="rules"]{display:flex;flex-direction:column;min-height:100dvh}
@@ -1187,6 +1163,7 @@ body[data-page="rules"] #main{flex:1 0 auto;display:flex;flex-direction:column}
 
 #origin > img.article-art,
 #rules > img.article-art{flex:1 0 auto;min-height:0;height:auto;object-fit:cover;object-position:center top}
+
 /* ===== Телефон: крупный текст в Миросоздании и Мироустройстве ===== */
 html.is-touch #origin #origin-list,
 html.is-touch #rules #rules-list{
@@ -1231,7 +1208,7 @@ html.is-touch :is(.lm-zoom button, .lm-chapter, button[data-zoom]):not(:disabled
   filter:drop-shadow(0 0 6px rgb(93 100 68 / 55%));
   scale:1.045;
 }
-html.is-touch .lm-zoom button[data-zoom="in"]:is(:active, .tap) img{content:url("./assets/buttons/zoom-in-hover.png")}
-html.is-touch .lm-zoom button[data-zoom="out"]:is(:active, .tap) img{content:url("./assets/buttons/zoom-out-hover.png")}
+html.is-touch .lm-zoom button[data-zoom="in"]:is(:active, .tap) img{content:url("./assets/buttons/zoom-in-hover.webp")}
+html.is-touch .lm-zoom button[data-zoom="out"]:is(:active, .tap) img{content:url("./assets/buttons/zoom-out-hover.webp")}
 
 html.is-touch .view-dots button:is(:active, .tap) img{filter:drop-shadow(0 0 6px rgb(93 100 68 / 55%));scale:1.08}

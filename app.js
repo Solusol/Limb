@@ -195,14 +195,14 @@
     const stem = person.file;
 
     if (kind === "portrait") {
-      return `assets/characters/portraits/Portret_${stem}.png`;
+      return `assets/characters/portraits/Portret_${stem}.webp`;
     }
 
     if (kind === "profile") {
-      return `assets/characters/profiles/Profail_${stem}.png`;
+      return `assets/characters/profiles/Profail_${stem}.webp`;
     }
 
-    return `assets/characters/moodboards/Mudbord_${stem}.png`;
+    return `assets/characters/moodboards/Mudbord_${stem}.webp`;
   }
 
   D.people.forEach(person => {
