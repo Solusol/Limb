@@ -1204,3 +1204,34 @@ html.is-touch #origin > h1,
 html.is-touch #rules > h1{font-size:calc(var(--title) * 1.6) !important}
 html.is-touch #origin > h2,
 html.is-touch #rules > h2{font-size:calc(var(--subtitle) * 1.7) !important;margin-bottom:var(--s12) !important}
+
+/* ===== Телефон: зелёная подсветка при нажатии ===== */
+html.is-touch :is(.site-header a, .back-link, .text-button):is(:active, .tap),
+html.is-touch .menu-row:not(:disabled):not([aria-disabled="true"]):is(:active, .tap){
+  color:var(--limb-hover,#5d6444) !important;
+  text-shadow:0 0 14px rgb(93 100 68 / 40%);
+  opacity:1 !important;
+}
+html.is-touch .menu-row:not(:disabled):not([aria-disabled="true"]):is(:active, .tap) .hand-icon{translate:5px 0}
+
+html.is-touch :is(#home .section-picture, .characters-grid .portrait):is(:active, .tap){
+  opacity:1 !important;
+  filter:drop-shadow(0 0 9px rgb(172 111 64 / 60%));
+  translate:0 -4px;
+}
+
+html.is-touch :is(.hand-open-link, .open-image-link, .image-button:not(:disabled)):is(:active, .tap){opacity:1 !important}
+html.is-touch :is(.hand-open-link, .open-image-link, .image-button:not(:disabled)):is(:active, .tap) img:not(.hint){
+  filter:brightness(0) saturate(100%) invert(38%) sepia(15%) saturate(817%) hue-rotate(34deg) brightness(92%) contrast(87%) drop-shadow(0 0 6px rgb(93 100 68 / 55%));
+  scale:1.045;
+}
+
+html.is-touch :is(.lm-zoom button, .lm-chapter, button[data-zoom]):not(:disabled):is(:active, .tap){opacity:1 !important}
+html.is-touch :is(.lm-zoom button, .lm-chapter, button[data-zoom]):not(:disabled):is(:active, .tap) img{
+  filter:drop-shadow(0 0 6px rgb(93 100 68 / 55%));
+  scale:1.045;
+}
+html.is-touch .lm-zoom button[data-zoom="in"]:is(:active, .tap) img{content:url("./assets/buttons/zoom-in-hover.png")}
+html.is-touch .lm-zoom button[data-zoom="out"]:is(:active, .tap) img{content:url("./assets/buttons/zoom-out-hover.png")}
+
+html.is-touch .view-dots button:is(:active, .tap) img{filter:drop-shadow(0 0 6px rgb(93 100 68 / 55%));scale:1.08}
