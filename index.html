@@ -17,6 +17,21 @@
       matchMedia("(pointer:coarse)").addEventListener("change", check);
     })();
   </script>
+  <script>
+    (function () {
+      var SEL = ".site-header a, .back-link, .menu-row, .text-button, " +
+        "#home .section-picture, .characters-grid .portrait, " +
+        ".hand-open-link, .open-image-link, .image-button, " +
+        ".lm-zoom button, .lm-chapter, button[data-zoom], .view-dots button";
+      document.addEventListener("pointerdown", function (e) {
+        if (!document.documentElement.classList.contains("is-touch")) return;
+        var el = e.target.closest(SEL);
+        if (!el || el.disabled) return;
+        el.classList.add("tap");
+        setTimeout(function () { el.classList.remove("tap"); }, 350);
+      }, { passive: true });
+    })();
+  </script>
   <link rel="icon" type="image/png" sizes="48x48" href="./favicon.png">
   <link rel="stylesheet" href="./styles.css">
   <script src="./content.js" defer></script>
