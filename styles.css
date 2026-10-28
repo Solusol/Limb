@@ -1120,28 +1120,70 @@ footer a {
 /* ===== Таймлайн ===== */
 #timeline{--tl-hover:#5f7a4a}
 #timeline h2{text-align:center;font-size:var(--subtitle);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--s16)}
-.tl-board{background:url("assets/timeline/taimline.png") center/100% 100% no-repeat;padding:clamp(28px,7vw,90px) clamp(20px,7vw,80px);display:grid;gap:clamp(28px,6vw,64px)}
-.tl-card{background:url("assets/timeline/taimline-data.png") center/100% 100% no-repeat;padding:clamp(20px,4vw,40px) clamp(20px,4vw,44px) clamp(36px,5vw,56px);color:#1d1b17}
+.tl-board{background:url("assets/timeline/taimline.png") center/100% 100% no-repeat;padding:clamp(28px,7vw,90px) clamp(20px,7vw,80px);display:grid;gap:clamp(16px,2vw,28px)}
+.tl-card{background:url("assets/timeline/taimline-data.png") center/100% 100% no-repeat;padding:clamp(20px,4vw,40px) clamp(20px,4vw,44px);color:#1d1b17}
 .tl-card h3{font-size:clamp(1.6rem,1rem + 2vw,3rem);text-transform:uppercase;letter-spacing:.15em;margin-bottom:clamp(12px,2vw,20px);font-weight:400;color:#1d1b17}
-.tl-fields{display:flex;flex-wrap:wrap;gap:clamp(10px,2vw,28px)}
+.tl-fields{display:flex;flex-wrap:nowrap;gap:clamp(10px,2vw,28px)}
 .tl-field{position:relative;display:grid;place-items:center;height:clamp(64px,8vw,96px);cursor:text}
 .tl-field.s{width:clamp(96px,14vw,150px);background:url("assets/timeline/taimline-den-mesyats.png") center/100% 100% no-repeat}
 .tl-field.l{width:clamp(170px,27vw,300px);background:url("assets/timeline/taimline-god.png") center/100% 100% no-repeat}
 .tl-field input{width:100%;height:100%;border:0;background:transparent;text-align:center;font:inherit;font-size:clamp(1.6rem,1rem + 2.2vw,3rem);letter-spacing:.08em;outline:none;color:var(--heading);caret-color:var(--tl-hover);transition:color .18s ease}
 .tl-field:hover input,.tl-field input:focus{color:var(--tl-hover)}
-.tl-field input::selection{background:var(--tl-hover);color:#e4dfcd}
-.tl-field small{position:absolute;bottom:-1.6em;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:#6b6456}
-.tl-hint{display:block;width:clamp(180px,24vw,300px);height:auto;margin:calc(-1 * clamp(28px,6vw,64px)) 0;margin-left:clamp(8px,2vw,24px);pointer-events:none;user-select:none}
+.tl-field input::selection{background:transparent;color:var(--tl-hover)}
+.tl-field input::-moz-selection{background:transparent;color:var(--tl-hover)}
+.tl-field small{display:none}
+.tl-hint{display:block;width:clamp(180px,24vw,300px);height:auto;margin:0 0 0 clamp(8px,2vw,24px);pointer-events:none;user-select:none}
 .tl-note{min-height:1.5em;margin-top:var(--s6);text-align:center;font-size:var(--sm);color:var(--heading)}
+
 /* ===== Подсказки в профайлах ===== */
-#character .character-pager{position:relative;overflow:visible;margin-bottom:clamp(60px,7vw,100px)}
-#character .hint{position:absolute;height:auto;max-width:none;pointer-events:none;user-select:none}
-#character .hint-tuda{width:clamp(130px,15vw,200px);right:calc(100% - 22%);bottom:58%}
-#character .hint-mudbord{width:clamp(90px,10vw,130px);left:50%;top:100%;transform:translateX(-50%)}
-@media (max-width:700px){#character .hint-tuda{display:none}}
-#timeline .tl-hint{position:relative;top:var(--tl-hint-y,22px)}
-#timeline .tl-field input::selection{background:transparent;color:var(--tl-hover)}
-#timeline .tl-field input::-moz-selection{background:transparent;color:var(--tl-hover)}
-#character .character-pager .hint-tuda{transform:translate(var(--tuda-x,-50px),var(--tuda-y,-5px)) !important}
-#character .hint-mudbord{transition:opacity .2s ease}
+/* ===== Подсказки в профайлах ===== */
+#character .character-pager{position:relative;overflow:visible;margin-bottom:clamp(90px,10vw,220px)}
+#character .character-pager > .hint{position:absolute !important;right:auto !important;bottom:auto !important;height:auto !important;max-width:none !important;margin:0 !important;pointer-events:none;user-select:none}
+#character .character-pager > .hint-tuda{transform:translate(-100%,-100%) !important}
+#character .character-pager > .hint-mudbord{transform:translateX(-50%) !important;transition:opacity .2s ease}
 #character:has([data-person-view="mood"][aria-pressed="true"]) .hint-mudbord{opacity:0;visibility:hidden}
+#character .view-dots button:focus:not(:focus-visible){outline:none}
+
+/* ===== Мобильная версия: крупная навигация ===== */
+html.is-touch{--m:2.4;--m2:1.7}
+
+html.is-touch .site-header{font-size:calc(var(--sm) * var(--m)) !important;padding-block:48px !important}
+html.is-touch .site-header a{min-height:calc(44px * var(--m)) !important;gap:18px !important}
+html.is-touch .site-header nav{gap:calc(1rem * var(--m)) !important}
+html.is-touch .site-header .hand-icon{width:calc(36px * var(--m)) !important;height:auto !important}
+
+html.is-touch .menu-row{min-height:calc(140px * var(--m2)) !important;font-size:calc(var(--subtitle) * var(--m2)) !important}
+html.is-touch .menu-row .hand-icon{width:calc(80px * var(--m2)) !important}
+
+html.is-touch #home .section-cards h2{font-size:calc(42px * var(--m2)) !important}
+html.is-touch .hand-open-link img,
+html.is-touch .open-image-link img,
+html.is-touch .person-card .person-open-link img{width:calc(130px * var(--m2)) !important;max-height:none !important}
+html.is-touch .person-card h2{font-size:calc(var(--lg) * var(--m2)) !important}
+
+html.is-touch #character .character-pager .image-button img{width:calc(130px * var(--m2)) !important;max-height:none !important}
+html.is-touch #character .view-dots button{width:calc(48px * var(--m)) !important;height:calc(48px * var(--m)) !important}
+html.is-touch #character .view-dots img{width:calc(40px * var(--m)) !important;height:calc(40px * var(--m)) !important}
+
+html.is-touch .lm-zoom button{width:calc(60px * var(--m)) !important;height:calc(60px * var(--m)) !important}
+html.is-touch .lm-chapter{min-height:calc(44px * var(--m)) !important}
+
+html.is-touch .tl-field.s{width:calc(150px * 1.45) !important}
+html.is-touch .tl-field.l{width:calc(300px * 1.45) !important}
+html.is-touch .tl-field{height:calc(96px * 1.45) !important}
+html.is-touch .tl-field input{font-size:calc(3rem * 1.45) !important}
+html.is-touch .tl-hint{width:calc(300px * 1.45) !important}
+
+#timeline .tl-note{color:var(--text,#e4dfcd) !important;font-size:calc(var(--sm) * 1.2) !important;letter-spacing:.04em}
+/* ===== Миросоздание и Мироустройство: картинка до низа экрана ===== */
+body[data-page="origin"],
+body[data-page="rules"]{display:flex;flex-direction:column;min-height:100dvh}
+
+body[data-page="origin"] #main,
+body[data-page="rules"] #main{flex:1 0 auto;display:flex;flex-direction:column}
+
+#origin.page:not([hidden]),
+#rules.page:not([hidden]){flex:1 0 auto;display:flex;flex-direction:column}
+
+#origin > img.article-art,
+#rules > img.article-art{flex:1 0 auto;min-height:0;height:auto;object-fit:cover;object-position:center top}

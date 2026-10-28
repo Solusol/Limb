@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=1440">
   <meta name="color-scheme" content="dark">
   <title>Лимб</title>
+  <script>
+    (function () {
+      function check() {
+        var small = Math.min(screen.width, screen.height) < 820;
+        var touch = matchMedia("(pointer:coarse)").matches || navigator.maxTouchPoints > 0;
+        document.documentElement.classList.toggle("is-touch", small && touch);
+      }
+      check();
+      addEventListener("resize", check);
+      matchMedia("(pointer:coarse)").addEventListener("change", check);
+    })();
+  </script>
   <link rel="icon" type="image/png" sizes="48x48" href="./favicon.png">
   <link rel="stylesheet" href="./styles.css">
   <script src="./content.js" defer></script>
