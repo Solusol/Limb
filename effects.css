@@ -4,17 +4,21 @@
  --limb-focus: #5d6444;
  --limb-duration: 220ms;
 }
+
 .site-header a, .back-link, .menu-row, .text-button {
  transition: color var(--limb-duration) ease, text-shadow var(--limb-duration) ease, opacity var(--limb-duration) ease;
 }
+
 #home .section-picture, .characters-grid .portrait {
  transition: filter var(--limb-duration) ease, opacity var(--limb-duration) ease;
 }
+
 .hand-open-link img, .open-image-link img, .image-button img,
 .lm-zoom button img, .lm-chapter:not(:disabled) img,
 button[data-zoom] img {
  transition: filter var(--limb-duration) ease, scale var(--limb-duration) ease;
 }
+
 @media (hover: hover) and (pointer: fine) {
  .site-header a:hover, .back-link:hover,
  .menu-row:not(:disabled):not([aria-disabled="true"]):hover,
@@ -23,10 +27,12 @@ button[data-zoom] img {
   text-shadow: 0 0 14px rgb(93 100 68 / 40%);
   opacity: 1;
  }
+
  #home .section-picture:hover, .characters-grid .portrait:hover {
   opacity: 1;
   filter: drop-shadow(0 0 9px rgb(93 100 68 / 55%));
  }
+
  .hand-open-link:hover, .open-image-link:hover,
  .image-button:not(:disabled):hover,
  .lm-zoom button:not(:disabled):hover,
@@ -35,51 +41,93 @@ button[data-zoom] img {
   opacity: 1 !important;
   filter: none;
  }
+
  .hand-open-link:hover img, .open-image-link:hover img,
  .image-button:not(:disabled):hover img {
   filter: brightness(0) saturate(100%) invert(38%) sepia(15%) saturate(817%) hue-rotate(34deg) brightness(92%) contrast(87%) drop-shadow(0 0 6px rgb(93 100 68 / 55%));
   scale: 1.045;
  }
+
  .lm-zoom button:not(:disabled):hover img,
  .lm-chapter:not(:disabled):hover img,
  button[data-zoom]:not(:disabled):hover img {
   filter: drop-shadow(0 0 6px rgb(93 100 68 / 55%));
   scale: 1.045;
  }
- /* Готовые картинки: сохраняем их исходные цвета. src и логику карты не меняем. */
+
+ /* Готовые картинки: сохраняем их исходные цвета.
+    src и логику карты не меняем. */
  .lm-zoom button[data-zoom="in"]:not(:disabled):hover img {
   content: url("./assets/buttons/zoom-in-hover.webp");
  }
+
  .lm-zoom button[data-zoom="out"]:not(:disabled):hover img {
   content: url("./assets/buttons/zoom-out-hover.webp");
  }
- /* Отдельное состояние только для уже выбранной первой главы. */
+
+ /* Наведение на уже выбранную главу. */
  .lm-chapter[data-chapter="1"][aria-pressed="true"]:not(:disabled):hover img {
   content: url("./assets/buttons/glava1-active-hover.webp");
  }
+
+ .lm-chapter[data-chapter="7"][aria-pressed="true"]:not(:disabled):hover img {
+  content: url("./assets/buttons/glava7-active-hover.webp");
+ }
+
+ .lm-chapter[data-chapter="8"][aria-pressed="true"]:not(:disabled):hover img {
+  content: url("./assets/buttons/glava8-active-hover.webp");
+ }
+
+ .lm-chapter[data-chapter="11"][aria-pressed="true"]:not(:disabled):hover img {
+  content: url("./assets/buttons/glava11-active-hover.webp");
+ }
+
+ .lm-chapter[data-chapter="17"][aria-pressed="true"]:not(:disabled):hover img {
+  content: url("./assets/buttons/glava17-active-hover.webp");
+ }
+
  .menu-row:not(:disabled):not([aria-disabled="true"]) .hand-icon {
   transition: translate var(--limb-duration) ease;
  }
+
  .menu-row:not(:disabled):not([aria-disabled="true"]):hover .hand-icon {
   translate: 5px 0;
  }
 }
+
 a:focus-visible, button:focus-visible, select:focus-visible {
  outline: 2px solid var(--limb-focus);
  outline-offset: 5px;
 }
-.page:not([hidden]) { animation: limb-page-in 360ms ease-out both; }
-@keyframes limb-page-in { from { opacity: 0; } to { opacity: 1; } }
+
+.page:not([hidden]) {
+ animation: limb-page-in 360ms ease-out both;
+}
+
+@keyframes limb-page-in {
+ from { opacity: 0; }
+ to { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
- .page:not([hidden]) { animation: none !important; }
+ .page:not([hidden]) {
+  animation: none !important;
+ }
+
  .site-header a, .back-link, .menu-row, .menu-row .hand-icon,
  .text-button, #home .section-picture, .characters-grid .portrait,
  .hand-open-link img, .open-image-link img, .image-button img,
  .lm-zoom button img, .lm-chapter img, button[data-zoom] img {
   transition: none !important;
  }
+
  .hand-open-link:hover img, .open-image-link:hover img,
  .image-button:hover img, .lm-zoom button:hover img,
- .lm-chapter:hover img, button[data-zoom]:hover img { scale: none; }
- .menu-row:not(:disabled):not([aria-disabled="true"]):hover .hand-icon { translate: none; }
+ .lm-chapter:hover img, button[data-zoom]:hover img {
+  scale: none;
+ }
+
+ .menu-row:not(:disabled):not([aria-disabled="true"]):hover .hand-icon {
+  translate: none;
+ }
 }

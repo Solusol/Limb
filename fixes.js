@@ -910,6 +910,12 @@
 
 /*
  * КАРТА ЛИМБА — карта в рамке + кнопки глав картинками.
+ *
+ * Стартовое состояние: общая карта Karta.webp, ни одна глава не выбрана.
+ * Повторное нажатие на выбранную главу возвращает стартовую карту.
+ * Чтобы добавить главу, допиши строку в chapterMaps —
+ * кнопка появится сама (нужны glavaN.webp, glavaN-active.webp,
+ * glavaN-active-hover.webp и правило в effects.css).
  */
 (() => {
   const page = document.querySelector("#map-view");
@@ -922,10 +928,17 @@
     zoomOut: "assets/buttons/zoom-out.webp",
     baseMap: "assets/maps/Karta.webp",
     chapterMaps: {
-      1: "assets/maps/Karta-po-glavam.webp"
-      // 2: "assets/maps/glava-2.webp"  — добавлять по мере готовности
+      1: "assets/maps/Karta-po-glavam.webp",
+      7: "assets/maps/Karta-po-glavam7.webp",
+      8: "assets/maps/Karta-po-glavam8.webp",
+      11: "assets/maps/Karta-po-glavam11.webp",
+      17: "assets/maps/Karta-po-glavam17.webp"
     }
   };
+
+  const CHAPTERS = Object.keys(PATHS.chapterMaps)
+    .map(Number)
+    .sort((a, b) => a - b);
 
   const state = { chapter: null, scale: 1, x: 0, y: 0, drag: null };
 
@@ -971,7 +984,8 @@
   }
   frame.complete ? fitFrame() : frame.addEventListener("load", fitFrame);
 
-  for (let i = 1; i <= 10; i++) {
+  /* Кнопки — только для глав, у которых есть карта */
+  for (const i of CHAPTERS) {
     const li = document.createElement("li");
     const btn = document.createElement("button");
     const img = document.createElement("img");
@@ -980,17 +994,15 @@
     btn.className = "lm-chapter";
     btn.dataset.chapter = String(i);
     btn.setAttribute("aria-label", `Глава ${i}`);
+    btn.setAttribute("aria-pressed", "false");
 
     img.src = `${PATHS.buttonsDir}glava${i}.webp`;
     img.alt = "";
     img.draggable = false;
 
-    if (PATHS.chapterMaps[i]) {
-      btn.setAttribute("aria-pressed", "false");
-    } else {
-      btn.disabled = true;
-      btn.title = "Маршрут этой главы пока не добавлен";
-    }
+    img.addEventListener("error", () => {
+      console.warn(`Лимб: не найдена кнопка ${img.getAttribute("src")}`);
+    });
 
     btn.append(img);
     li.append(btn);
@@ -1052,6 +1064,7 @@
 
   window.addEventListener("resize", apply);
 
+  /* null — стартовое состояние: общая карта, все кнопки неактивны */
   function setChapter(n) {
     state.chapter = n;
 
@@ -1060,7 +1073,7 @@
       const active = i === n;
       const img = btn.querySelector("img");
 
-      if (!btn.disabled) btn.setAttribute("aria-pressed", String(active));
+      btn.setAttribute("aria-pressed", String(active));
 
       img.src = active
         ? `${PATHS.buttonsDir}glava${i}-active.webp`
@@ -1192,7 +1205,7 @@
       margin: 0;
       padding: 0;
       display: grid;
-      grid-template-rows: repeat(10, 1fr);
+      grid-template-rows: repeat(${CHAPTERS.length}, 1fr);
       gap: var(--chapter-gap);
     }
 
@@ -1205,11 +1218,6 @@
       padding: 0;
       background: none;
       border: 0;
-    }
-
-    .lm-chapter:disabled {
-      opacity: 1;
-      cursor: default;
     }
 
     .lm-chapter:focus:not(:focus-visible) { outline: none; }
