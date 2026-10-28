@@ -1187,3 +1187,20 @@ body[data-page="rules"] #main{flex:1 0 auto;display:flex;flex-direction:column}
 
 #origin > img.article-art,
 #rules > img.article-art{flex:1 0 auto;min-height:0;height:auto;object-fit:cover;object-position:center top}
+/* ===== Телефон: крупный текст в Миросоздании и Мироустройстве ===== */
+html.is-touch #origin #origin-list,
+html.is-touch #rules #rules-list{
+  width:94% !important;
+  padding:calc(var(--s8) * 2) calc(var(--s8) * 2.2) !important;
+  font-size:calc(var(--base) * 2.2) !important;
+  line-height:1.5 !important;
+}
+html.is-touch #origin-list li,
+html.is-touch #rules-list li{padding-left:.4em}
+html.is-touch #origin-list li + li,
+html.is-touch #rules-list li + li{margin-top:1em !important}
+
+html.is-touch #origin > h1,
+html.is-touch #rules > h1{font-size:calc(var(--title) * 1.6) !important}
+html.is-touch #origin > h2,
+html.is-touch #rules > h2{font-size:calc(var(--subtitle) * 1.7) !important;margin-bottom:var(--s12) !important}
