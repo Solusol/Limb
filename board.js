@@ -19,23 +19,23 @@
   const H = 1600;
 
   const ART = {
-    background: C.assets?.background || "doska-fon.png",
-    panel: "fon.png",
-    textField: "fon-tekst.png",
-    paperHeading: C.assets?.paperHeading || "bumaga.png",
-    stickerHeading: C.assets?.stickerHeading || "stikeri.png",
+    background: C.assets?.background || "doska-fon.webp",
+    panel: "fon.webp",
+    textField: "fon-tekst.webp",
+    paperHeading: C.assets?.paperHeading || "bumaga.webp",
+    stickerHeading: C.assets?.stickerHeading || "stikeri.webp",
 
-    newNote: "doska-knopka.png",
-    newNoteHover: "doska-knopka-hover.png",
+    newNote: "doska-knopka.webp",
+    newNoteHover: "doska-knopka-hover.webp",
 
-    publish: "opublikovat.png",
-    publishHover: "opublikovat-hover.png",
+    publish: "opublikovat.webp",
+    publishHover: "opublikovat-hover.webp",
 
-    cancel: "otmena.png",
-    cancelHover: "otmena-hover.png",
-    cancelDisabled: "otmena-na.png",
+    cancel: "otmena.webp",
+    cancelHover: "otmena-hover.webp",
+    cancelDisabled: "otmena-na.webp",
 
-    place: "doska-knopka-blue.png"
+    place: "doska-knopka-blue.webp"
   };
 
   const base = (C.base || "assets/doska/").replace(/\/?$/, "/");
@@ -49,7 +49,7 @@
     ...(Array.isArray(C.specialStickers) ? C.specialStickers : []),
     ...(Array.isArray(C.stickerNumbers) ? C.stickerNumbers : []).map(n => ({
       id: `sticker-${n}`,
-      file: `Sticker (${n}) 1.png`
+      file: `Sticker (${n}) 1.webp`
     }))
   ];
 
@@ -120,7 +120,7 @@
   }
 
   /*
-   * Кнопка из PNG.
+   * Кнопка из WebP.
    * normal — обычная, hover — наведение, disabled — неактивная.
    */
   function artButton(button, files) {
@@ -285,7 +285,7 @@
     disabled: ART.cancelDisabled
   });
 
-  /* Нижняя голубая кнопка: исходная ширина PNG */
+  /* Нижняя голубая кнопка: исходная ширина WebP */
   const placeImage = artButton($("bn-place"), { normal: ART.place });
 
   function applyPlaceSize() {

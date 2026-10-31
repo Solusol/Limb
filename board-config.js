@@ -1,8 +1,8 @@
 "use strict";
 
 window.LIMB_BOARD = {
-supabaseUrl: "https://quwquigejhdkymoydjji.supabase.co",
-publicKey: "sb_publishable_KUbZ6TNlUyheema5GoDcWQ_Ie6g7Sys",
+  supabaseUrl: "https://quwquigejhdkymoydjji.supabase.co",
+  publicKey: "sb_publishable_KUbZ6TNlUyheema5GoDcWQ_Ie6g7Sys",
 
   // Публичный site key Turnstile, если CAPTCHA включена в Supabase.
   captchaSiteKey: "",
@@ -10,35 +10,35 @@ publicKey: "sb_publishable_KUbZ6TNlUyheema5GoDcWQ_Ie6g7Sys",
   base: "assets/doska/",
 
   assets: {
-  background: "doska-fon.png",
+    background: "doska-fon.webp",
 
-  /* Красная фактура редактора */
-  panel: "fon.png",
+    /* Красная фактура редактора */
+    panel: "fon.webp",
 
-  /* Оставить записку */
-  postButton: "doska-knopka.png",
-  postButtonHover: "doska-knopka-hover.png",
+    /* Оставить записку */
+    postButton: "doska-knopka.webp",
+    postButtonHover: "doska-knopka-hover.webp",
 
-  /* Отмена */
-  cancelButton: "otmena.png",
-  cancelButtonHover: "otmena-hover.png",
+    /* Отмена */
+    cancelButton: "otmena.webp",
+    cancelButtonHover: "otmena-hover.webp",
 
-  paperHeading: "bumaga.png",
-  stickerHeading: "stikeri.png"
-},
+    paperHeading: "bumaga.webp",
+    stickerHeading: "stikeri.webp"
+  },
 
   papers: [
-    { id: "p01", file: "Paper 01 1.png", ratio: 1.414 },
-    { id: "p12", file: "Paper 12 1.png", ratio: 1 },
-    { id: "p09", file: "Paper 09 1.png", ratio: 1.414 },
-    { id: "p03", file: "Paper 03 1.png", ratio: 0.65 },
-    { id: "p02", file: "Paper 02 1.png", ratio: 0.56 }
+    { id: "p01", file: "Paper 01 1.webp", ratio: 1.414 },
+    { id: "p12", file: "Paper 12 1.webp", ratio: 1 },
+    { id: "p09", file: "Paper 09 1.webp", ratio: 1.414 },
+    { id: "p03", file: "Paper 03 1.webp", ratio: 0.65 },
+    { id: "p02", file: "Paper 02 1.webp", ratio: 0.56 }
   ],
 
   specialStickers: [
-    { id: "stamp03", file: "STICKER - STAMPED 03 1.png" },
-    { id: "stamp04", file: "STICKER - STAMPED 04 1.png" },
-    { id: "zeus", file: "STICKER - Zeus 1.png" }
+    { id: "stamp03", file: "STICKER - STAMPED 03 1.webp" },
+    { id: "stamp04", file: "STICKER - STAMPED 04 1.webp" },
+    { id: "zeus", file: "STICKER - Zeus 1.webp" }
   ],
 
   stickerNumbers: [

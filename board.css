@@ -400,6 +400,7 @@
     scroll-behavior: auto !important;
   }
 }
+
 /* ===== Исправления доски объявлений ===== */
 
 /* Убираем две кнопки справа */
@@ -408,8 +409,10 @@
   display: none !important;
 }
 
-/* Убираем только подсказку над доской.
-   Подсказки внутри редактора остаются. */
+/*
+  Убираем только подсказку над доской.
+  Подсказки внутри редактора остаются.
+*/
 #bulletin-board #bn-board-view > .bn-help {
   display: none !important;
 }
@@ -420,9 +423,9 @@
 }
 
 /*
- * Один экземпляр фона.
- * Пропорции задаст скрипт по реальному doska-fon.png.
- */
+  Один экземпляр фона.
+  Пропорции задаст скрипт по реальному doska-fon.webp.
+*/
 #bulletin-board .bn-cork {
   position: relative;
   width: 100%;
@@ -438,8 +441,10 @@
   background-size: 100% 100%;
 }
 
-/* Интерфейс располагается внутри фоновой картинки,
-   а не увеличивает её высоту */
+/*
+  Интерфейс располагается внутри фоновой картинки,
+  а не увеличивает её высоту.
+*/
 #bulletin-board #bn-board-view {
   position: absolute;
   inset: 0;
@@ -494,16 +499,18 @@
   margin: 0;
 }
 
-/* Сообщение об ошибке остаётся доступным,
-   но располагается перед фоном */
+/*
+  Сообщение об ошибке остаётся доступным,
+  но располагается перед фоном.
+*/
 #bulletin-board > .bn-status {
   margin: 0 16px 16px;
 }
 
 /*
- * В редакторе высота зависит от формы.
- * Фон по-прежнему не повторяется.
- */
+  В редакторе высота зависит от формы.
+  Фон по-прежнему не повторяется.
+*/
 #bulletin-board .bn-cork:has(#bn-editor:not([hidden])) {
   aspect-ratio: auto;
   padding: clamp(16px, 4vw, 48px);
@@ -515,6 +522,7 @@
     gap: 12px;
   }
 }
+
 /* Доска без собственной прокрутки */
 #bulletin-board .bn-scroll {
   overflow: hidden !important;
@@ -528,17 +536,18 @@
   width: 0;
   height: 0;
 }
+
 /* ===== Обновление редактора доски ===== */
 
 /*
- * Красная фактура без растягивания надписей.
- * Размер повторяющейся текстуры можно подстроить отдельно.
- */
+  Красная фактура без растягивания надписей.
+  Размер повторяющейся текстуры можно подстроить отдельно.
+*/
 #bulletin-board .bn-editor {
   position: relative;
 
   background-color: var(--bn-rust, #793b29);
-  background-image: url("./assets/doska/fon.png");
+  background-image: url("./assets/doska/fon.webp");
   background-position: left top;
   background-repeat: repeat;
   background-size: 640px auto;
@@ -566,7 +575,7 @@
   padding: 0;
 }
 
-/* Общая конструкция кнопок с двумя PNG */
+/* Общая конструкция кнопок с двумя WebP-изображениями */
 #bulletin-board .bn-art-button {
   display: inline-grid;
   grid-template-columns: minmax(0, 1fr);
@@ -615,9 +624,9 @@
 }
 
 /*
- * Отключаем общее затемнение кнопки при наведении:
- * вместо него используется твой hover-PNG.
- */
+  Отключаем общее затемнение кнопки при наведении:
+  вместо него используется hover-изображение.
+*/
 #bulletin-board .bn-art-button:not(:disabled):hover {
   opacity: 1;
 }
@@ -657,9 +666,9 @@
 }
 
 /*
- * Все стикеры показываются без внутреннего скроллбара.
- * Прокручивается сама страница.
- */
+  Все стикеры показываются без внутреннего скроллбара.
+  Прокручивается сама страница.
+*/
 #bulletin-board .bn-stickers {
   max-height: none;
   height: auto;
@@ -699,6 +708,7 @@
     transition: none;
   }
 }
+
 /* ===== Фон редактора и верхняя строка ===== */
 
 #bulletin-board #bn-editor {
@@ -710,7 +720,7 @@
 
   /* Одна картинка растягивается на всю панель */
   background-color: transparent;
-  background-image: var(--bn-panel, url("./assets/doska/fon.png"));
+  background-image: var(--bn-panel, url("./assets/doska/fon.webp"));
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -777,6 +787,7 @@
     row-gap: 16px;
   }
 }
+
 /* ===== Редактор: выделение, ввод текста и ползунки ===== */
 
 #bulletin-board {
@@ -784,9 +795,9 @@
 }
 
 /*
- * Тонкая пунктирная рамка.
- * Прозрачная рамка в обычном состоянии сохраняет размеры кнопок.
- */
+  Тонкая пунктирная рамка.
+  Прозрачная рамка в обычном состоянии сохраняет размеры кнопок.
+*/
 #bulletin-board #bn-editor .bn-paper-choice,
 #bulletin-board #bn-editor .bn-sticker-choice {
   border: 1px dashed transparent;
@@ -829,9 +840,9 @@
 }
 
 /*
- * Фон поля ввода.
- * Картинка растягивается на размер поля, не повторяется.
- */
+  Фон поля ввода.
+  Картинка растягивается на размер поля, не повторяется.
+*/
 #bulletin-board #bn-editor #bn-text {
   width: 100%;
   min-height: 190px;
@@ -841,7 +852,7 @@
   border-radius: 0;
 
   background-color: transparent;
-  background-image: url("./assets/doska/fon-tekst.png");
+  background-image: url("./assets/doska/fon-tekst.webp");
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -866,9 +877,9 @@
 }
 
 /*
- * Ползунки без прямоугольной рамки.
- * И дорожка, и бегунок используют #516D79.
- */
+  Ползунки без прямоугольной рамки.
+  И дорожка, и бегунок используют #516D79.
+*/
 #bulletin-board #bn-editor input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -961,7 +972,7 @@ input[type="range"]:focus-visible {
   cursor: default;
 }
 
-/* Новая PNG-кнопка перехода к размещению */
+/* WebP-кнопка перехода к размещению */
 #bulletin-board #bn-editor #bn-place {
   display: inline-grid;
   grid-template-columns: minmax(0, 1fr);
@@ -997,6 +1008,7 @@ input[type="range"]:focus-visible {
   opacity: .4;
   cursor: default;
 }
+
 /* ===== Неактивная «Отмена» ===== */
 
 #bulletin-board #bn-cancel .bn-button-disabled {
@@ -1025,13 +1037,12 @@ input[type="range"]:focus-visible {
   opacity: 1 !important;
 }
 
-
 /* ===== Нижняя голубая кнопка исходного размера ===== */
 
 /*
- * Не растягиваем до 340px или до ширины колонки.
- * На узком экране разрешаем только уменьшение.
- */
+  Не растягиваем до 340px или до ширины колонки.
+  На узком экране разрешаем только уменьшение.
+*/
 #bulletin-board #bn-editor #bn-place {
   display: inline-grid;
   justify-self: center;
@@ -1062,18 +1073,16 @@ input[type="range"]:focus-visible {
   object-fit: contain;
 }
 
-
 /* ===== Убираем выделенный служебный блок ===== */
 
 /*
- * Элементы остаются в документе, потому что старые функции
- * обновляют координаты и состояние кнопок.
- * Визуально панель полностью скрыта.
- */
+  Элементы остаются в документе, потому что старые функции
+  обновляют координаты и состояние кнопок.
+  Визуально панель полностью скрыта.
+*/
 #bulletin-board #bn-position {
   display: none !important;
 }
-
 
 /* ===== Публикация справа сверху ===== */
 
@@ -1082,7 +1091,7 @@ input[type="range"]:focus-visible {
   align-items: center;
 }
 
-/* Размер новой PNG-кнопки публикации */
+/* Размер WebP-кнопки публикации */
 #bulletin-board #bn-publish {
   width: clamp(180px, 24vw, 280px);
   max-width: 100%;
@@ -1110,8 +1119,8 @@ input[type="range"]:focus-visible {
   opacity: .5;
   cursor: wait;
 }
-/* Обе кнопки находятся в одном месте справа над доской */
 
+/* Обе кнопки находятся в одном месте справа над доской */
 #bulletin-board #bn-board-view > .bn-toolbar {
   position: relative;
 
@@ -1188,6 +1197,7 @@ input[type="range"]:focus-visible {
     padding-left: 8px;
   }
 }
+
 /* Нижняя кнопка редактора — компактный размер */
 #bulletin-board #bn-editor #bn-place {
   width: clamp(140px, 14vw, 250px) !important;
@@ -1199,6 +1209,7 @@ input[type="range"]:focus-visible {
   width: 100%;
   height: auto;
 }
+
 /* Скрываем старую верхнюю панель действий */
 #bulletin-board .bn-toolbar[aria-hidden="true"] {
   display: none !important;
@@ -1264,18 +1275,21 @@ input[type="range"]:focus-visible {
     justify-self: center;
   }
 }
+
 /* Скрываем системную плашку вместе с её отступами */
 #bulletin-board #bn-status {
   display: none !important;
 }
+
 /* Отступ над красной панелью редактора */
 #bulletin-board #bn-editor {
   margin-top: clamp(100px, 10vw, 160px);
 }
+
 /* Просмотр записки — на красной плашке */
 #bn-reader {
   background-color: transparent;
-  background-image: url("./assets/doska/fon.png");
+  background-image: url("./assets/doska/fon.webp");
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
