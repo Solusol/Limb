@@ -31,8 +31,10 @@
     publish: "opublikovat.webp",
     publishHover: "opublikovat-hover.webp",
 
-    cancel: "otmena.webp",
-    cancelHover: "otmena-hover.webp",
+    cancel: "otmena-.png",
+    cancelHover: "otmena-hover.png",
+    redo: "povtor-.png",
+    redoHover: "povtor-hover.png",
     cancelDisabled: "otmena-na.webp",
 
     place: "doska-knopka-blue.webp"
@@ -83,6 +85,7 @@
     captchaPromise: null,
 
     history: [],
+    future: [],
     historyKey: null
   };
 
@@ -120,7 +123,7 @@
   }
 
   /*
-   * Кнопка из WebP.
+   * Кнопка из изображения.
    * normal — обычная, hover — наведение, disabled — неактивная.
    */
   function artButton(button, files) {
@@ -199,11 +202,6 @@
         <img id="bn-paper-heading" class="bn-heading-art"
              alt="Выбрать бумагу" width="500" height="90">
 
-        <div class="bn-editor-top">
-          <button id="bn-cancel" type="button"
-                  aria-label="Отменить последнее действие"
-                  title="Отменить последнее действие"></button>
-        </div>
 
         <div id="bn-papers" class="bn-papers"
              role="group" aria-label="Варианты бумаги"></div>
@@ -217,6 +215,12 @@
 
         <div class="bn-editor-grid">
           <div class="bn-preview-holder">
+            <button id="bn-cancel" type="button" class="bn-history-button"
+                    aria-label="Отменить последнее действие"
+                    title="Отменить последнее действие"></button>
+            <button id="bn-redo" type="button" class="bn-history-button"
+                    aria-label="Повторить отменённое действие"
+                    title="Повторить отменённое действие"></button>
             <div id="bn-preview" aria-label="Предпросмотр записки"></div>
           </div>
 
@@ -230,7 +234,7 @@
             <label>
               Размер бумаги
               <input id="bn-width" type="range"
-                     min="120" max="420" step="10" value="280">
+       min="120" max="420" step="10" value="420">
             </label>
 
             <label>
@@ -281,11 +285,15 @@
 
   artButton($("bn-cancel"), {
     normal: ART.cancel,
-    hover: ART.cancelHover,
-    disabled: ART.cancelDisabled
+    hover: ART.cancelHover
   });
 
-  /* Нижняя голубая кнопка: исходная ширина WebP */
+  artButton($("bn-redo"), {
+    normal: ART.redo,
+    hover: ART.redoHover
+  });
+
+  /* Нижняя голубая кнопка: исходная ширина изображения */
   const placeImage = artButton($("bn-place"), { normal: ART.place });
 
   function applyPlaceSize() {
@@ -627,6 +635,37 @@
     }
 `;
 
+
+  style.textContent += `
+    #bulletin-board #bn-editor > #bn-paper-heading { grid-column:1 / -1; }
+    #bulletin-board #bn-editor .bn-preview-holder {
+      position:relative; box-sizing:border-box; padding-inline:48px;
+    }
+    #bulletin-board #bn-editor .bn-preview-holder > button.bn-history-button {
+      position:absolute; top:0; width:40px !important; height:40px;
+      min-width:40px; min-height:40px; max-width:40px;
+      margin:0; padding:0; border:0; background:transparent;
+      box-shadow:none; z-index:5; transform:none;
+    }
+    #bulletin-board #bn-editor .bn-preview-holder > #bn-cancel { left:0; }
+    #bulletin-board #bn-editor .bn-preview-holder > #bn-redo { right:0; }
+    #bulletin-board #bn-editor button.bn-history-button > img {
+      display:block; width:100%; height:100%; object-fit:contain;
+    }
+    #bulletin-board #bn-editor button.bn-history-button:disabled {
+      opacity:.35 !important; cursor:default;
+    }
+    #bulletin-board #bn-editor button.bn-history-button:focus-visible {
+      outline:1px dashed #516D79; outline-offset:3px;
+    }
+    #bulletin-board #bn-editor button.bn-history-button:active:not(:disabled) .bn-button-normal {
+      opacity:0;
+    }
+    #bulletin-board #bn-editor button.bn-history-button.bn-has-hover:active:not(:disabled) .bn-button-hover {
+      opacity:1;
+    }
+  `;
+
   document.head.append(style);
 
   /* ---------- Окно чтения ---------- */
@@ -863,7 +902,7 @@
       id: crypto.randomUUID(),
       x: 400,
       y: 80,
-      width: 280,
+      width: 420,
       payload: {
         kind: "note",
         paperId: first.id,
@@ -1167,6 +1206,7 @@
     if (!state.draft) return;
     if (key && state.historyKey === key) return;
 
+    state.future = [];
     state.history.push({
       draft: clone(state.draft),
       part: state.part
@@ -1184,6 +1224,7 @@
 
   function resetHistory() {
     state.history = [];
+    state.future = [];
     state.historyKey = null;
   }
 
@@ -1198,6 +1239,7 @@
       return;
     }
 
+    state.future.push({ draft: clone(state.draft), part: state.part });
     partDrag = null;
     state.draft = previous.draft;
     state.part = previous.part;
@@ -1207,7 +1249,26 @@
     status("Последнее действие отменено.");
   }
 
+  function redo() {
+    if (!state.draft || state.writing) return;
+    const next = state.future.pop();
+    endHistoryGroup();
+    if (!next) {
+      updateControls();
+      return;
+    }
+    state.history.push({ draft: clone(state.draft), part: state.part });
+    if (state.history.length > 100) state.history.shift();
+    partDrag = null;
+    state.draft = next.draft;
+    state.part = next.part;
+    $("bn-text").value = state.draft.payload.text;
+    renderPreview();
+    status("Отменённое действие повторено.");
+  }
+
   $("bn-cancel").addEventListener("click", undo);
+  $("bn-redo").addEventListener("click", redo);
 
   /* ---------- Редактор ---------- */
 
@@ -1226,6 +1287,7 @@
     if (selected) $("bn-sticker-size").value = selected.w;
 
     $("bn-cancel").disabled = state.writing || state.history.length === 0;
+    $("bn-redo").disabled = state.writing || state.future.length === 0;
 
     $("bn-papers").querySelectorAll("button").forEach(button => {
       button.setAttribute(

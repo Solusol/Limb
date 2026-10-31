@@ -4,30 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=1440">
   <meta name="color-scheme" content="dark">
-
   <title>Лимб</title>
 
   <script>
     (function () {
       function check() {
         var small = Math.min(screen.width, screen.height) < 820;
-
-        var touch =
-          matchMedia("(pointer:coarse)").matches ||
-          navigator.maxTouchPoints > 0;
-
-        document.documentElement.classList.toggle(
-          "is-touch",
-          small && touch
-        );
+        var touch = matchMedia("(pointer:coarse)").matches || navigator.maxTouchPoints > 0;
+        document.documentElement.classList.toggle("is-touch", small && touch);
       }
-
       check();
-
       window.addEventListener("resize", check);
-
       var pointerQuery = matchMedia("(pointer:coarse)");
-
       if (pointerQuery.addEventListener) {
         pointerQuery.addEventListener("change", check);
       } else if (pointerQuery.addListener) {
@@ -45,570 +33,249 @@
         ".lm-zoom button, .lm-chapter, button[data-zoom], " +
         ".view-dots button, " +
         "#bulletin-board button, #bn-reader button";
-
-      document.addEventListener(
-        "pointerdown",
-        function (event) {
-          if (
-            !document.documentElement.classList.contains("is-touch")
-          ) {
-            return;
-          }
-
-          if (!(event.target instanceof Element)) return;
-
-          var element = event.target.closest(SEL);
-
-          if (
-            !element ||
-            element.disabled ||
-            element.getAttribute("aria-disabled") === "true"
-          ) {
-            return;
-          }
-
-          element.classList.add("tap");
-
-          setTimeout(function () {
-            element.classList.remove("tap");
-          }, 350);
-        },
-        { passive: true }
-      );
+      document.addEventListener("pointerdown", function (event) {
+        if (!document.documentElement.classList.contains("is-touch")) return;
+        if (!(event.target instanceof Element)) return;
+        var element = event.target.closest(SEL);
+        if (!element || element.disabled || element.getAttribute("aria-disabled") === "true") return;
+        element.classList.add("tap");
+        setTimeout(function () { element.classList.remove("tap"); }, 350);
+      }, { passive: true });
     })();
   </script>
 
-  <link
-    rel="icon"
-    type="image/webp"
-    href="./favicon.webp"
-  >
+  <link rel="icon" type="image/webp" href="./favicon.webp">
 
   <!-- Основное оформление -->
   <link rel="stylesheet" href="./styles.css">
-
   <!-- Эффекты -->
   <link rel="stylesheet" href="./effects.css">
   <link rel="stylesheet" href="./effects-extra.css">
-
   <!-- Доска объявлений -->
   <link rel="stylesheet" href="./board.css">
+  <!-- Конструктор временного персонажа -->
+  <link rel="stylesheet" href="./custom-character.css">
 
   <!-- Основные данные и логика сайта -->
   <script src="./content.js" defer></script>
   <script src="./app.js" defer></script>
-
   <!-- Исправления оформления -->
   <script src="./fixes.js" defer></script>
   <script src="./fixes-2.js" defer></script>
-
   <!-- Таймлайн и подсказки -->
   <script src="./timeline.js" defer></script>
   <script src="./hints.js" defer></script>
-
-  <!-- Доска объявлений: подключается после остальных скриптов -->
+  <!-- Доска объявлений -->
   <script src="./board-config.js" defer></script>
   <script src="./board.js" defer></script>
+  <!-- Конструктор: после основной логики сайта и доски -->
+  <script src="./custom-character-config.js" defer></script>
+<script src="./custom-character.js" defer></script>
+<script src="./custom-character-gallery-fix.js" defer></script>
+<script src="./custom-character-profile-fix.js" defer></script>
+<script src="./custom-character-panel-fix.js" defer></script>
 </head>
-
 <body>
   <a class="skip-link" href="#main">К содержимому</a>
-
   <header class="site-header">
     <a class="home-link" href="#home">На главную</a>
-
     <nav aria-label="Основное меню">
       <a href="#bible">Библия</a>
       <a href="#maps">Карта</a>
       <a href="#characters">Персонажи</a>
       <a href="#board">Доска объявлений</a>
     </nav>
-
     <div class="external-links">
-      <a
-        id="ficbook-link"
-        href="https://ficbook.net/readfic/019fc4c0-555b-7238-b775-b492a66afa89#part_content"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          class="hand-icon"
-          data-ui="hand"
-          alt=""
-          width="48"
-          height="32"
-          loading="lazy"
-        >
+      <a id="ficbook-link" href="https://ficbook.net/readfic/019fc4c0-555b-7238-b775-b492a66afa89#part_content" target="_blank" rel="noopener noreferrer">
+        <img class="hand-icon" data-ui="hand" alt="" width="48" height="32" loading="lazy">
         <span>Фикбук</span>
       </a>
-
-      <a
-        id="tiktok-link"
-        href="https://www.tiktok.com/@ssolusol?_r=1&amp;_t=ZT-9AqvDOtrwZZ"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          class="hand-icon"
-          data-ui="hand"
-          alt=""
-          width="48"
-          height="32"
-          loading="lazy"
-        >
+      <a id="tiktok-link" href="https://www.tiktok.com/@ssolusol?_r=1&amp;_t=ZT-9AqvDOtrwZZ" target="_blank" rel="noopener noreferrer">
+        <img class="hand-icon" data-ui="hand" alt="" width="48" height="32" loading="lazy">
         <span>TikTok</span>
       </a>
     </div>
   </header>
 
   <main id="main" tabindex="-1">
-
     <!-- Главная -->
-
-    <section
-      id="home"
-      class="page home-page"
-      aria-labelledby="home-title"
-    >
+    <section id="home" class="page home-page" aria-labelledby="home-title">
       <div class="home-heading">
         <h1 id="home-title">LIMB</h1>
         <p>* от лат. limbus — рубеж, предел, граница</p>
       </div>
-
-      <img
-        class="hero-creature"
-        data-art="creature"
-        alt=""
-        width="1200"
-        height="500"
-        loading="eager"
-        decoding="async"
-      >
-
+      <img class="hero-creature" data-art="creature" alt="" width="1200" height="500" loading="eager" decoding="async">
       <section class="paper-section" aria-label="О мире и метки">
         <div class="paper-content">
           <ul class="tags" id="tags" aria-label="Метки"></ul>
           <div class="annotation" id="annotation"></div>
         </div>
       </section>
-
-      <nav
-        class="section-cards"
-        id="section-cards"
-        aria-label="Разделы сайта"
-      ></nav>
-
-      <section
-        id="cover-section"
-        class="cover-section"
-        hidden
-        aria-label="Обложки"
-      >
+      <nav class="section-cards" id="section-cards" aria-label="Разделы сайта"></nav>
+      <section id="cover-section" class="cover-section" hidden aria-label="Обложки">
         <h2>Обложки</h2>
-
         <div id="cover-image"></div>
-
         <div class="cover-controls">
-          <button
-            id="cover-prev"
-            class="image-button"
-            type="button"
-            aria-label="Предыдущая обложка"
-          >
-            <img
-              data-ui="previous"
-              alt=""
-              width="160"
-              height="64"
-              loading="lazy"
-            >
+          <button id="cover-prev" class="image-button" type="button" aria-label="Предыдущая обложка">
+            <img data-ui="previous" alt="" width="160" height="64" loading="lazy">
           </button>
-
           <span id="cover-counter" aria-live="polite"></span>
-
-          <button
-            id="cover-next"
-            class="image-button"
-            type="button"
-            aria-label="Следующая обложка"
-          >
-            <img
-              data-ui="next"
-              alt=""
-              width="160"
-              height="64"
-              loading="lazy"
-            >
+          <button id="cover-next" class="image-button" type="button" aria-label="Следующая обложка">
+            <img data-ui="next" alt="" width="160" height="64" loading="lazy">
           </button>
         </div>
       </section>
     </section>
 
     <!-- Оглавление Библии -->
-
     <section id="bible" class="page inner-page" hidden>
       <h1>Библия</h1>
-
-      <nav
-        class="outline-menu"
-        id="bible-menu"
-        aria-label="Разделы Библии"
-      ></nav>
+      <nav class="outline-menu" id="bible-menu" aria-label="Разделы Библии"></nav>
     </section>
 
     <!-- Миросоздание -->
-
     <section id="origin" class="page article-page" hidden>
       <h1>Библия</h1>
       <h2>Миросоздание</h2>
-
       <ul class="text-panel" id="origin-list"></ul>
-
-      <img
-        class="article-art"
-        data-art="powerPlant"
-        alt=""
-        width="1200"
-        height="600"
-        loading="lazy"
-        decoding="async"
-      >
+      <img class="article-art" data-art="powerPlant" alt="" width="1200" height="600" loading="lazy" decoding="async">
     </section>
 
     <!-- Мироустройство -->
-
     <section id="rules" class="page article-page" hidden>
       <h1>Библия</h1>
       <h2>Мироустройство</h2>
-
       <ul class="text-panel" id="rules-list"></ul>
-
-      <img
-        class="article-art"
-        data-art="creature"
-        alt=""
-        width="1200"
-        height="500"
-        loading="lazy"
-        decoding="async"
-      >
+      <img class="article-art" data-art="creature" alt="" width="1200" height="500" loading="lazy" decoding="async">
     </section>
 
     <!-- Таймлайн -->
-
     <section id="timeline" class="page inner-page" hidden>
       <h1>Библия</h1>
       <h2>Таймлайн</h2>
-
       <div class="tl-board">
         <section class="tl-card">
           <h3>Дата в реальности</h3>
-
           <div class="tl-fields">
             <label class="tl-field s">
-              <input
-                id="rD"
-                type="text"
-                inputmode="numeric"
-                maxlength="2"
-                aria-label="День в реальности"
-              >
+              <input id="rD" type="text" inputmode="numeric" maxlength="2" aria-label="День в реальности">
               <small>день</small>
             </label>
-
             <label class="tl-field s">
-              <input
-                id="rM"
-                type="text"
-                inputmode="numeric"
-                maxlength="2"
-                aria-label="Месяц в реальности"
-              >
+              <input id="rM" type="text" inputmode="numeric" maxlength="2" aria-label="Месяц в реальности">
               <small>месяц</small>
             </label>
-
             <label class="tl-field l">
-              <input
-                id="rY"
-                type="text"
-                inputmode="numeric"
-                maxlength="4"
-                aria-label="Год в реальности"
-              >
+              <input id="rY" type="text" inputmode="numeric" maxlength="4" aria-label="Год в реальности">
               <small>год</small>
             </label>
           </div>
         </section>
-
-        <img
-          class="tl-hint"
-          src="assets/decor/podskazka-timeline.webp"
-          alt=""
-          aria-hidden="true"
-          decoding="async"
-        >
-
+        <img class="tl-hint" src="assets/decor/podskazka-timeline.webp" alt="" aria-hidden="true" decoding="async">
         <section class="tl-card">
           <h3>Дата в Лимбе</h3>
-
           <div class="tl-fields">
             <label class="tl-field s">
-              <input
-                id="lD"
-                type="text"
-                inputmode="numeric"
-                maxlength="2"
-                aria-label="День в Лимбе"
-              >
+              <input id="lD" type="text" inputmode="numeric" maxlength="2" aria-label="День в Лимбе">
               <small>день</small>
             </label>
-
             <label class="tl-field s">
-              <input
-                id="lM"
-                type="text"
-                inputmode="numeric"
-                maxlength="2"
-                aria-label="Месяц в Лимбе"
-              >
+              <input id="lM" type="text" inputmode="numeric" maxlength="2" aria-label="Месяц в Лимбе">
               <small>месяц</small>
             </label>
-
             <label class="tl-field l">
-              <input
-                id="lY"
-                type="text"
-                inputmode="numeric"
-                maxlength="4"
-                aria-label="Год в Лимбе"
-              >
+              <input id="lY" type="text" inputmode="numeric" maxlength="4" aria-label="Год в Лимбе">
               <small>год</small>
             </label>
           </div>
         </section>
       </div>
-
       <p class="tl-note" id="tlNote" aria-live="polite"></p>
     </section>
 
     <!-- Выбор карты -->
-
     <section id="maps" class="page inner-page" hidden>
       <h1>Карта</h1>
-
-      <nav
-        class="outline-menu"
-        id="maps-menu"
-        aria-label="Выбор карты"
-      ></nav>
+      <nav class="outline-menu" id="maps-menu" aria-label="Выбор карты"></nav>
     </section>
 
     <!-- Карта Лимба / карта по главам -->
-
     <section id="map-view" class="page map-page" hidden>
       <h1 id="map-title">Карта Лимба</h1>
-
       <div class="map-controls">
-        <button
-          id="map-plus"
-          class="image-button compact"
-          type="button"
-          aria-label="Приблизить карту"
-        >
-          <img
-            data-ui="zoomIn"
-            alt=""
-            width="48"
-            height="48"
-            loading="lazy"
-          >
+        <button id="map-plus" class="image-button compact" type="button" aria-label="Приблизить карту">
+          <img data-ui="zoomIn" alt="" width="48" height="48" loading="lazy">
         </button>
-
-        <button
-          id="map-minus"
-          class="image-button compact"
-          type="button"
-          aria-label="Отдалить карту"
-        >
-          <img
-            data-ui="zoomOut"
-            alt=""
-            width="48"
-            height="48"
-            loading="lazy"
-          >
+        <button id="map-minus" class="image-button compact" type="button" aria-label="Отдалить карту">
+          <img data-ui="zoomOut" alt="" width="48" height="48" loading="lazy">
         </button>
-
-        <button
-          id="map-reset"
-          class="image-button"
-          type="button"
-          aria-label="Показать всю карту"
-        >
-          <img
-            data-ui="reset"
-            alt=""
-            width="160"
-            height="64"
-            loading="lazy"
-          >
+        <button id="map-reset" class="image-button" type="button" aria-label="Показать всю карту">
+          <img data-ui="reset" alt="" width="160" height="64" loading="lazy">
         </button>
-
         <label id="chapter-control" hidden>
           <span class="sr-only">Выбрать карту главы</span>
           <select id="chapter-select"></select>
         </label>
-
         <span id="map-scale" aria-live="polite">100%</span>
       </div>
-
-      <div
-        class="map-viewport"
-        id="map-viewport"
-        tabindex="0"
-        aria-label="Карта. Масштаб меняется кнопками.
+      <div class="map-viewport" id="map-viewport" tabindex="0" aria-label="Карта. Масштаб меняется кнопками.
         Увеличенную карту можно перемещать перетаскиванием
-        или стрелками клавиатуры."
-      >
+        или стрелками клавиатуры.">
         <div class="map-layer" id="map-layer">
-          <img
-            id="map-image"
-            alt=""
-            width="1200"
-            height="1000"
-            loading="eager"
-            decoding="async"
-            draggable="false"
-          >
+          <img id="map-image" alt="" width="1200" height="1000" loading="eager" decoding="async" draggable="false">
         </div>
-
         <p id="map-error" class="asset-error" hidden></p>
       </div>
-
       <p id="map-note" class="map-note"></p>
     </section>
 
     <!-- Карта Дома -->
-
     <section id="house" class="page house-page" hidden>
       <h1>Карта Дома</h1>
-
-      <img
-        id="house-image"
-        alt="Схема Дома: этажи, помещения и расселение"
-        width="1340"
-        height="857"
-        loading="lazy"
-        decoding="async"
-      >
+      <img id="house-image" alt="Схема Дома: этажи, помещения и расселение" width="1340" height="857" loading="lazy" decoding="async">
     </section>
 
     <!-- Галерея персонажей -->
-
     <section id="characters" class="page gallery-page" hidden>
       <h1>Персонажи</h1>
       <div class="characters-grid" id="characters-grid"></div>
     </section>
 
     <!-- Страница персонажа -->
-
     <section id="character" class="page character-page" hidden>
       <h1>Персонажи</h1>
       <h2 id="character-name" class="sr-only"></h2>
-
       <figure class="character-sheet" id="character-sheet"></figure>
-
       <div class="character-pager">
-        <button
-          id="person-prev"
-          class="image-button"
-          type="button"
-          aria-label="Предыдущее представление персонажа"
-        >
-          <img
-            data-ui="previous"
-            alt=""
-            width="160"
-            height="64"
-            loading="lazy"
-          >
+        <button id="person-prev" class="image-button" type="button" aria-label="Предыдущее представление персонажа">
+          <img data-ui="previous" alt="" width="160" height="64" loading="lazy">
         </button>
-
-        <div
-          class="view-dots"
-          role="group"
-          aria-label="Профайл или мудборд"
-        >
-          <button
-            type="button"
-            data-person-view="profile"
-            aria-label="Профайл"
-            aria-pressed="true"
-          >
-            <img
-              alt=""
-              width="40"
-              height="40"
-              loading="lazy"
-            >
+        <div class="view-dots" role="group" aria-label="Профайл или мудборд">
+          <button type="button" data-person-view="profile" aria-label="Профайл" aria-pressed="true">
+            <img alt="" width="40" height="40" loading="lazy">
           </button>
-
-          <button
-            type="button"
-            data-person-view="mood"
-            aria-label="Мудборд"
-            aria-pressed="false"
-          >
-            <img
-              alt=""
-              width="40"
-              height="40"
-              loading="lazy"
-            >
+          <button type="button" data-person-view="mood" aria-label="Мудборд" aria-pressed="false">
+            <img alt="" width="40" height="40" loading="lazy">
           </button>
         </div>
-
-        <button
-          id="person-next"
-          class="image-button"
-          type="button"
-          aria-label="Следующее представление персонажа"
-        >
-          <img
-            data-ui="next"
-            alt=""
-            width="160"
-            height="64"
-            loading="lazy"
-          >
+        <button id="person-next" class="image-button" type="button" aria-label="Следующее представление персонажа">
+          <img data-ui="next" alt="" width="160" height="64" loading="lazy">
         </button>
       </div>
-
       <a class="back-link" href="#characters">Все персонажи</a>
     </section>
 
     <!-- Дополнительные материалы -->
-
     <section id="readers" class="page inner-page" hidden>
       <h1>Для читателей</h1>
       <div id="reader-materials"></div>
     </section>
 
     <!-- Проверка файлов -->
-
     <section id="materials" class="page inner-page" hidden>
       <h1>Материалы</h1>
-
       <p>Проверка файлов, используемых этой версией сайта.</p>
-
-      <button
-        id="check-assets"
-        class="text-button"
-        type="button"
-      >
-        Проверить файлы
-      </button>
-
+      <button id="check-assets" class="text-button" type="button">Проверить файлы</button>
       <p id="asset-summary" role="status"></p>
       <div id="asset-results"></div>
     </section>
@@ -616,8 +283,9 @@
     <!--
       Доску объявлений #bulletin-board и окно просмотра #bn-reader
       создаёт board.js. Здесь их дублировать не нужно.
+      Конструктор #custom-character и его карточку в галерее
+      создаёт custom-character.js.
     -->
-
   </main>
 
   <!--
@@ -625,39 +293,27 @@
     Страницы доступны напрямую:
     #readers — материалы;
     #materials — проверка файлов;
-    #board — доска объявлений.
+    #board — доска объявлений;
+    #custom-character — конструктор временного персонажа.
   -->
-
   <noscript>
     Для переключения страниц, работы карты
     и доски объявлений нужен JavaScript.
   </noscript>
 
   <!-- GoatCounter: статистика посещений -->
-
   <script>
     window.goatcounter = {
       path: function (path) {
         return path + location.hash;
       }
     };
-
     window.addEventListener("hashchange", function () {
-      if (
-        window.goatcounter &&
-        typeof window.goatcounter.count === "function"
-      ) {
-        window.goatcounter.count({
-          path: location.pathname + location.hash
-        });
+      if (window.goatcounter && typeof window.goatcounter.count === "function") {
+        window.goatcounter.count({ path: location.pathname + location.hash });
       }
     });
   </script>
-
-  <script
-    data-goatcounter="https://limb.goatcounter.com/count"
-    async
-    src="https://gc.zgo.at/count.js"
-  ></script>
+  <script data-goatcounter="https://limb.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>

@@ -1,0 +1,614 @@
+/*
+  Временный персонаж: отдельный модуль,
+  без постоянного хранилища.
+*/
+
+#custom-character[hidden],
+#cc-card [hidden],
+#custom-character [hidden] {
+  display: none !important;
+}
+
+#custom-character,
+#cc-card,
+#cc-icons {
+  font-family: "Beer Money", cursive;
+  font-weight: 400;
+}
+
+#custom-character {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 24px 16px 48px;
+}
+
+#custom-character .cc-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 16px 0;
+}
+
+#custom-character button,
+#custom-character input,
+#cc-icons button,
+#cc-card button {
+  font: inherit;
+}
+
+#custom-character button,
+#cc-icons button,
+#cc-card button {
+  cursor: pointer;
+}
+
+#custom-character .cc-tools button,
+#cc-icons .cc-close {
+  color: #eee7d5;
+  background: transparent;
+  border: 1px dashed #516d79;
+  padding: 10px 18px;
+}
+
+#custom-character .cc-note {
+  font-size: 18px;
+  color: #eee7d5;
+}
+
+
+/* ===== Основа профайла ===== */
+
+#custom-character .cc-canvas {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1025 / 1325;
+  container-type: inline-size;
+  isolation: isolate;
+}
+
+#custom-character .cc-base {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: fill;
+  z-index: 0;
+  pointer-events: none;
+}
+
+
+/* ===== Основная фотография ===== */
+
+/*
+  Расширяем фото вверх и влево под серебристую рамку.
+  Правый край: 14% + 35.5% = 49.5%.
+  Нижний край: 20% + 31.5% = 51.5%.
+*/
+
+#custom-character .cc-canvas > .cc-main-photo {
+  position: absolute;
+
+  left: 14% !important;
+  top: 20% !important;
+
+  width: 35.5% !important;
+  height: 31.5% !important;
+
+  margin: 0;
+  padding: 0;
+
+  object-fit: cover;
+  z-index: 1;
+}
+
+
+/* ===== Отдельная серебристая рамка ===== */
+
+#custom-character .cc-canvas > .cc-frame {
+  display: block !important;
+  position: absolute;
+
+  left: 4%;
+  top: 5%;
+
+  width: 55%;
+  height: 55%;
+
+  margin: 0;
+  padding: 0;
+
+  object-fit: fill;
+  z-index: 2;
+
+  pointer-events: none;
+}
+
+
+/* Загрузка внутри большой рамки не показывается */
+
+#custom-character .cc-main-upload,
+#custom-character .cc-main-upload.cc-filled {
+  display: none !important;
+}
+
+
+/* ===== Общие кнопки загрузки ===== */
+
+#custom-character .cc-upload {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  line-height: 0;
+}
+
+#custom-character .cc-upload img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+#custom-character .cc-upload .cc-hover {
+  display: none;
+}
+
+@media (hover: hover) {
+  #custom-character .cc-upload:hover .cc-normal {
+    display: none;
+  }
+
+  #custom-character .cc-upload:hover .cc-hover {
+    display: block;
+  }
+}
+
+
+/* ===== Характеристики ===== */
+
+#custom-character .cc-stats {
+  position: absolute;
+
+  left: 65%;
+  top: 18%;
+
+  width: 25.5%;
+  height: 35%;
+
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  gap: 2%;
+
+  z-index: 3;
+}
+
+#custom-character .cc-stat {
+  position: relative;
+  min-width: 0;
+}
+
+#custom-character .cc-stat-art {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: fill;
+  pointer-events: none;
+}
+
+#custom-character .cc-cells {
+  position: absolute;
+
+  left: 2%;
+  right: 2%;
+  bottom: 8%;
+
+  height: 45%;
+
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 0;
+}
+
+#custom-character .cc-cell {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+
+  height: 100%;
+  min-height: 0;
+
+  padding: 0;
+  margin: 0;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+}
+
+#custom-character .cc-cell[aria-pressed="true"] {
+  background: var(--cc-cross) center / 80% 80% no-repeat;
+}
+
+
+/* ===== Иконка персонажа ===== */
+
+#custom-character .cc-icon-select {
+  position: absolute;
+
+  left: 14%;
+  top: 67%;
+
+  width: 12%;
+  height: 9%;
+
+  padding: 0;
+  border: 0;
+
+  background: transparent;
+  z-index: 3;
+}
+
+#custom-character .cc-icon-select img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+
+/* ===== Компактные строки анкеты ===== */
+
+#custom-character .cc-data {
+  position: absolute;
+
+  left: 14%;
+  top: 78%;
+
+  width: 43%;
+  height: auto !important;
+
+  display: grid;
+  grid-template-rows: none !important;
+  grid-auto-rows: auto;
+
+  gap: 1.1cqw !important;
+  align-content: start;
+
+  z-index: 3;
+}
+
+#custom-character .cc-data input {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+
+  height: 1.3em !important;
+  min-height: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 2px !important;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+  color: #eee7d5;
+
+  font: inherit;
+  font-size: clamp(12px, 2.4cqw, 28px);
+  line-height: 1.3 !important;
+}
+
+#custom-character .cc-data input::placeholder {
+  color: #eee7d5;
+  opacity: 1;
+}
+
+
+/* ===== Нижняя фотография ===== */
+
+#custom-character .cc-secondary {
+  position: absolute;
+
+  left: 62%;
+  top: 79.5%;
+
+  width: 25%;
+  height: 12%;
+
+  z-index: 3;
+}
+
+#custom-character .cc-secondary-photo {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+#custom-character .cc-secondary .cc-upload {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+#custom-character .cc-secondary .cc-upload img {
+  max-height: 100%;
+  object-fit: contain;
+}
+
+
+/* ===== Нижняя кнопка загрузки ===== */
+
+/*
+  Размеры и выравнивание дополнительно задаёт
+  custom-character-panel-fix.js.
+*/
+
+#custom-character .cc-secondary:not(.cc-filled) {
+  left: 68% !important;
+  overflow: visible !important;
+}
+
+#custom-character .cc-secondary:not(.cc-filled) > .cc-upload {
+  position: absolute !important;
+
+  inset: auto !important;
+  left: -5% !important;
+  top: -5% !important;
+
+  width: 90% !important;
+  height: 80% !important;
+
+  min-width: 0;
+  min-height: 0;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border: 0;
+  background: transparent;
+}
+
+#custom-character .cc-secondary:not(.cc-filled) > .cc-upload > img {
+  grid-area: 1 / 1;
+
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+
+  margin: 0;
+  object-fit: contain;
+}
+
+/* После загрузки кнопка полностью скрыта */
+
+#custom-character .cc-secondary.cc-filled > .cc-upload {
+  display: none !important;
+}
+
+
+/* ===== Фокус элементов ===== */
+
+#custom-character :focus-visible,
+#cc-card :focus-visible,
+#cc-icons :focus-visible {
+  outline: 2px dashed #87a6b0;
+  outline-offset: 3px;
+}
+
+
+/* ===== Карточка в галерее ===== */
+
+#cc-card .cc-card-art {
+  position: relative;
+  display: block;
+
+  width: 100%;
+  aspect-ratio: 3 / 4;
+
+  background: #793b29;
+  overflow: hidden;
+}
+
+#cc-card .cc-card-photo {
+  position: absolute;
+
+  left: 18%;
+  top: 27%;
+
+  width: 64%;
+  height: 53%;
+
+  object-fit: cover;
+}
+
+#cc-card .cc-card-frame {
+  position: absolute;
+  inset: 6% 7%;
+
+  width: 86%;
+  height: 88%;
+
+  object-fit: fill;
+  pointer-events: none;
+}
+
+#cc-card .cc-card-placeholder {
+  position: absolute;
+
+  left: 28%;
+  top: 44%;
+
+  width: 44%;
+  height: auto;
+}
+
+#cc-card h2 {
+  overflow-wrap: anywhere;
+}
+
+#cc-card .cc-card-open {
+  display: inline-block;
+  padding: 8px 18px;
+
+  color: inherit;
+  background: transparent;
+
+  border: 1px solid #eee7d580;
+}
+
+
+/* ===== Уточнённые размеры рамки в галерее ===== */
+
+#cc-card .cc-gallery-art > .cc-card-frame {
+  left: 6% !important;
+  top: 6% !important;
+
+  width: 88% !important;
+  height: 86% !important;
+
+  margin: 0 !important;
+  object-fit: fill;
+}
+
+#cc-card .cc-gallery-art > .cc-card-photo {
+  left: 21% !important;
+  top: 30.3% !important;
+
+  width: 54% !important;
+  height: 49.5% !important;
+
+  margin: 0 !important;
+  object-fit: cover;
+}
+
+
+/* ===== Кнопка «Открыть» ===== */
+
+#cc-card a.cc-card-open.cc-exact-open {
+  display: block;
+
+  width: 23% !important;
+  max-width: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0 !important;
+  background: transparent !important;
+
+  box-shadow: none;
+  line-height: 0;
+}
+
+#cc-card a.cc-card-open.cc-exact-open > img {
+  display: block;
+
+  width: 100% !important;
+  height: auto !important;
+
+  margin: 0;
+  padding: 0;
+}
+
+/* После загрузки портрета кнопка загрузки в галерее скрывается */
+
+#cc-card .cc-gallery-art.cc-photo-ready .cc-gallery-upload {
+  display: none !important;
+}
+
+
+/* ===== Панель выбора иконок ===== */
+
+/*
+  Центрирование и авторскую подложку дополнительно задаёт
+  custom-character-profile-fix.js.
+*/
+
+#cc-icons {
+  width: min(700px, calc(100% - 32px));
+  max-height: 85dvh;
+
+  padding: 24px;
+
+  color: #eee7d5;
+  background: #22231f;
+
+  border: 1px dashed #516d79;
+}
+
+#cc-icons::backdrop {
+  background: #000b;
+}
+
+#cc-icons .cc-close {
+  display: block;
+  margin: 0 0 16px auto;
+}
+
+#cc-icons .cc-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 12px;
+}
+
+#cc-icons .cc-icon-choice {
+  padding: 8px;
+
+  border: 1px dashed transparent;
+  background: transparent;
+}
+
+#cc-icons .cc-icon-choice[aria-pressed="true"] {
+  border-color: #87a6b0;
+}
+
+#cc-icons .cc-icon-choice img {
+  display: block;
+
+  width: 100%;
+  height: 80px;
+
+  object-fit: contain;
+}
+
+
+/* ===== Сообщения ===== */
+
+#custom-character .cc-error {
+  color: #ffd9bb;
+  min-height: 1.5em;
+}
+
+
+/* ===== Уменьшение движения ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  #custom-character *,
+  #cc-card * {
+    transition: none !important;
+  }
+}
+#custom-character .cc-icon-select {
+  width: 8% !important;
+  height: 6% !important;
+}
+
+#custom-character .cc-data {
+  top: 74.5% !important;
+}
