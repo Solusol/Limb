@@ -612,3 +612,13 @@
 #custom-character .cc-data {
   top: 74.5% !important;
 }
+/* Нижняя фотография — целиком, без обрезки */
+#custom-character .cc-secondary > .cc-secondary-photo {
+  width: 100% !important;
+  height: 100% !important;
+
+  object-fit: contain !important;
+  object-position: center;
+
+  background: transparent;
+}
