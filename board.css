@@ -1272,3 +1272,37 @@ input[type="range"]:focus-visible {
 #bulletin-board #bn-editor {
   margin-top: clamp(100px, 10vw, 160px);
 }
+/* Просмотр записки — на красной плашке */
+#bn-reader {
+  background-color: transparent;
+  background-image: url("./assets/doska/fon.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* «Закрыть» — без прямоугольной рамки */
+#bn-reader .bn-reader-close {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Убираем обычный контур окна при открытии */
+#bn-reader:focus {
+  outline: none;
+}
+
+/* Фокус кнопки оставляем только для управления клавиатурой */
+#bn-reader .bn-reader-close:focus:not(:focus-visible) {
+  outline: none;
+}
+
+#bn-reader .bn-reader-close:focus-visible {
+  outline: 1px dashed #516D79;
+  outline-offset: 4px;
+}
