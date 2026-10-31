@@ -1,0 +1,1274 @@
+/*
+  Доска объявлений Лимба.
+  Стили ограничены #bulletin-board и #bn-reader.
+  Используется Beer Money из основной таблицы стилей.
+*/
+
+#bulletin-board {
+  --bn-bg: none;
+  --bn-panel: none;
+  --bn-paper: #ded4bb;
+  --bn-ink: #292a25;
+  --bn-rust: #793b29;
+  --bn-blue: #547b87;
+  --bn-light: #eee7d5;
+
+  width: 100%;
+  max-width: none;
+  padding-inline: 0;
+}
+
+#bulletin-board > h1 {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+#bulletin-board .bn-cork {
+  min-height: 70vh;
+  padding: 32px clamp(12px, 4vw, 64px) 64px;
+  background:
+    #9c7750 var(--bn-bg)
+    center top / 1080px auto repeat;
+}
+
+#bulletin-board .bn-toolbar,
+#bulletin-board .bn-position,
+#bulletin-board .bn-editor-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+#bulletin-board .bn-toolbar {
+  justify-content: flex-end;
+}
+
+#bulletin-board button,
+#bulletin-board input,
+#bulletin-board textarea,
+#bn-reader button {
+  font-family: "Beer Money", cursive;
+  font-weight: 400;
+}
+
+#bulletin-board .bn-button {
+  min-height: 44px;
+  padding: 8px 16px;
+  color: var(--bn-light);
+  background: var(--bn-rust);
+  border: 1px solid rgb(238 231 213 / 45%);
+}
+
+#bulletin-board .bn-button.blue {
+  background: var(--bn-blue);
+}
+
+#bulletin-board button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+#bulletin-board .bn-post-image {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  width: min(280px, 100%);
+}
+
+#bulletin-board .bn-post-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+#bulletin-board .bn-status {
+  margin: 16px 0;
+  padding: 12px 16px;
+  color: var(--bn-light);
+  background: #252623;
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+#bulletin-board .bn-scroll {
+  width: 100%;
+  overflow: auto;
+  border: 1px solid rgb(35 30 24 / 40%);
+  overscroll-behavior-x: contain;
+}
+
+#bulletin-board .bn-world {
+  position: relative;
+  width: max(100%, 1000px);
+  aspect-ratio: 3 / 4;
+  isolation: isolate;
+}
+
+#bulletin-board .bn-note,
+#bn-reader .bn-note {
+  position: relative;
+  container-type: inline-size;
+  isolation: isolate;
+  color: #292a25;
+  font-family: "Beer Money", cursive;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+#bulletin-board .bn-world > .bn-note {
+  position: absolute;
+}
+
+#bulletin-board .bn-note img,
+#bn-reader .bn-note img {
+  display: block;
+  max-width: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+#bulletin-board .bn-paper,
+#bn-reader .bn-paper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+#bulletin-board .bn-note-text,
+#bn-reader .bn-note-text {
+  position: absolute;
+  z-index: 1;
+  width: 76%;
+  height: 72%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow: hidden;
+
+  font-family: "Beer Money", cursive;
+  font-size: calc(var(--bn-font) * 1cqw);
+  font-weight: 400;
+  line-height: 1.4;
+
+  color: #292a25;
+}
+
+#bulletin-board .bn-sticker,
+#bn-reader .bn-sticker {
+  position: absolute;
+  z-index: 2;
+  aspect-ratio: 1;
+}
+
+#bulletin-board .bn-sticker img,
+#bn-reader .bn-sticker img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+#bulletin-board .bn-note.selected {
+  outline: 2px dashed var(--bn-blue);
+  outline-offset: 5px;
+}
+
+#bulletin-board .bn-note.draft {
+  outline: 3px dashed var(--bn-rust);
+  outline-offset: 5px;
+}
+
+#bulletin-board .bn-note.movable {
+  cursor: grab;
+  touch-action: none;
+}
+
+#bulletin-board .bn-note.movable:active {
+  cursor: grabbing;
+}
+
+#bulletin-board .bn-position {
+  padding: 16px;
+  background: rgb(28 28 25 / 92%);
+  color: var(--bn-light);
+}
+
+#bulletin-board .bn-position label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#bulletin-board .bn-position input {
+  width: 100px;
+  min-height: 44px;
+  padding: 8px;
+  color: var(--bn-ink);
+  background: var(--bn-paper);
+  border: 1px solid var(--bn-ink);
+}
+
+#bulletin-board .bn-editor {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: clamp(16px, 4vw, 48px);
+  color: var(--bn-light);
+  background:
+    var(--bn-rust) var(--bn-panel)
+    center / 100% 100% no-repeat;
+}
+
+#bulletin-board .bn-editor h2 {
+  margin-bottom: 24px;
+  font-size: clamp(24px, 3vw, 42px);
+  text-transform: uppercase;
+}
+
+#bulletin-board .bn-heading-art {
+  display: block;
+  width: auto;
+  max-width: min(420px, 100%);
+  max-height: 72px;
+  height: auto;
+  object-fit: contain;
+  margin: 24px 0;
+}
+
+#bulletin-board .bn-papers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+#bulletin-board .bn-paper-choice {
+  width: 140px;
+  min-height: 120px;
+  padding: 8px;
+  border: 2px solid transparent;
+}
+
+#bulletin-board .bn-paper-choice[aria-pressed="true"] {
+  border-color: var(--bn-light);
+}
+
+#bulletin-board .bn-paper-choice img {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+}
+
+#bulletin-board .bn-stickers {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 8px;
+  max-height: 300px;
+  overflow: auto;
+  margin-bottom: 24px;
+}
+
+#bulletin-board .bn-sticker-choice {
+  min-height: 60px;
+  padding: 6px;
+}
+
+#bulletin-board .bn-sticker-choice img {
+  width: 100%;
+  height: 58px;
+  object-fit: contain;
+}
+
+#bulletin-board .bn-editor-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, .8fr);
+  gap: 32px;
+  align-items: start;
+}
+
+#bulletin-board .bn-preview-holder {
+  min-height: 300px;
+}
+
+#bulletin-board .bn-preview {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+#bulletin-board .bn-preview .bn-sticker,
+#bulletin-board .bn-preview .bn-note-text {
+  cursor: move;
+  touch-action: none;
+}
+
+#bulletin-board .bn-preview .bn-active-part {
+  outline: 2px dashed var(--bn-blue);
+  outline-offset: 2px;
+}
+
+#bulletin-board .bn-fields {
+  display: grid;
+  gap: 16px;
+}
+
+#bulletin-board .bn-fields label {
+  display: grid;
+  gap: 8px;
+}
+
+#bulletin-board .bn-fields textarea {
+  width: 100%;
+  min-height: 170px;
+  resize: vertical;
+  padding: 12px;
+  background: #eee7d5;
+  color: #292a25;
+  border: 1px solid #292a25;
+  font-size: 20px;
+}
+
+#bulletin-board .bn-fields input[type="range"] {
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+}
+
+#bulletin-board .bn-help {
+  margin: 16px 0;
+  color: inherit;
+  font-size: 17px;
+}
+
+#bn-reader {
+  width: min(560px, calc(100% - 32px));
+  max-height: 92dvh;
+  overflow: auto;
+  margin: auto;
+  padding: 24px;
+  background: #22231f;
+  color: #eee7d5;
+  border: 1px solid #eee7d5;
+}
+
+#bn-reader::backdrop {
+  background: rgb(0 0 0 / 80%);
+}
+
+#bn-reader .bn-reader-close {
+  display: block;
+  min-height: 44px;
+  margin-left: auto;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  color: inherit;
+  border: 1px solid currentColor;
+}
+
+#bn-reader .bn-note {
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  #bulletin-board .bn-editor-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #bulletin-board .bn-paper-choice {
+    width: 100px;
+  }
+
+  #bulletin-board .bn-paper-choice img {
+    height: 120px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #bulletin-board *,
+  #bn-reader * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* ===== Исправления доски объявлений ===== */
+
+/* Убираем две кнопки справа */
+#bulletin-board #bn-edit-own,
+#bulletin-board #bn-refresh {
+  display: none !important;
+}
+
+/* Убираем только подсказку над доской.
+   Подсказки внутри редактора остаются. */
+#bulletin-board #bn-board-view > .bn-help {
+  display: none !important;
+}
+
+/* Убираем нижний отступ страницы после фоновой картинки */
+#bulletin-board.page {
+  padding-bottom: 0;
+}
+
+/*
+ * Один экземпляр фона.
+ * Пропорции задаст скрипт по реальному doska-fon.png.
+ */
+#bulletin-board .bn-cork {
+  position: relative;
+  width: 100%;
+
+  min-height: 0;
+  height: auto;
+  aspect-ratio: var(--bn-background-ratio, 3 / 4);
+
+  padding: 0;
+
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100% 100%;
+}
+
+/* Интерфейс располагается внутри фоновой картинки,
+   а не увеличивает её высоту */
+#bulletin-board #bn-board-view {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  padding: clamp(24px, 5vw, 72px);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Оставляем справа только «Оставить записку» */
+#bulletin-board .bn-toolbar {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  margin: 0;
+}
+
+/* Поле записок — без видимой рамки и подложки */
+#bulletin-board .bn-scroll {
+  flex: 1 1 auto;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  overflow: auto;
+  border: 0 !important;
+  outline: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* Размер поля будет вписан скриптом в доступное место */
+#bulletin-board .bn-world {
+  width: var(--bn-world-width, 100%);
+  min-width: 0;
+  height: auto;
+
+  aspect-ratio: 3 / 4;
+  margin-inline: auto;
+
+  background: transparent;
+  border: 0;
+}
+
+/* Панель размещения черновика не растягивает фон */
+#bulletin-board .bn-position {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+/* Сообщение об ошибке остаётся доступным,
+   но располагается перед фоном */
+#bulletin-board > .bn-status {
+  margin: 0 16px 16px;
+}
+
+/*
+ * В редакторе высота зависит от формы.
+ * Фон по-прежнему не повторяется.
+ */
+#bulletin-board .bn-cork:has(#bn-editor:not([hidden])) {
+  aspect-ratio: auto;
+  padding: clamp(16px, 4vw, 48px);
+}
+
+@media (max-width: 760px) {
+  #bulletin-board #bn-board-view {
+    padding: 20px 12px;
+    gap: 12px;
+  }
+}
+/* Доска без собственной прокрутки */
+#bulletin-board .bn-scroll {
+  overflow: hidden !important;
+  scrollbar-width: none;
+  border: 0 !important;
+}
+
+/* Дополнительное отключение полосы в Chromium-браузерах */
+#bulletin-board .bn-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+/* ===== Обновление редактора доски ===== */
+
+/*
+ * Красная фактура без растягивания надписей.
+ * Размер повторяющейся текстуры можно подстроить отдельно.
+ */
+#bulletin-board .bn-editor {
+  position: relative;
+
+  background-color: var(--bn-rust, #793b29);
+  background-image: url("./assets/doska/fon.png");
+  background-position: left top;
+  background-repeat: repeat;
+  background-size: 640px auto;
+
+  filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+/* Убираем возможные дополнительные декоративные слои */
+#bulletin-board .bn-editor::before,
+#bulletin-board .bn-editor::after {
+  content: none;
+  display: none;
+}
+
+/* Верхняя строка: только «Отмена», справа */
+#bulletin-board .bn-editor-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+
+  width: 100%;
+  margin: 0 0 24px;
+  padding: 0;
+}
+
+/* Общая конструкция кнопок с двумя PNG */
+#bulletin-board .bn-art-button {
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr);
+
+  min-width: 44px;
+  min-height: 44px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  background: none;
+  box-shadow: none;
+
+  line-height: 0;
+  vertical-align: middle;
+}
+
+/* Оба изображения занимают одну ячейку */
+#bulletin-board .bn-art-button > img {
+  grid-area: 1 / 1;
+
+  display: block;
+  align-self: center;
+
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+
+  margin: 0;
+
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+
+  transition: opacity 160ms ease;
+}
+
+/* По умолчанию видна обычная кнопка */
+#bulletin-board .bn-art-button .bn-button-normal {
+  opacity: 1;
+}
+
+#bulletin-board .bn-art-button .bn-button-hover {
+  opacity: 0;
+}
+
+/*
+ * Отключаем общее затемнение кнопки при наведении:
+ * вместо него используется твой hover-PNG.
+ */
+#bulletin-board .bn-art-button:not(:disabled):hover {
+  opacity: 1;
+}
+
+/* Ховер мышью */
+@media (hover: hover) {
+  #bulletin-board .bn-art-button.bn-has-hover:not(:disabled):hover
+  .bn-button-normal {
+    opacity: 0;
+  }
+
+  #bulletin-board .bn-art-button.bn-has-hover:not(:disabled):hover
+  .bn-button-hover {
+    opacity: 1;
+  }
+}
+
+/* То же состояние при управлении клавиатурой */
+#bulletin-board .bn-art-button.bn-has-hover:not(:disabled):focus-visible
+.bn-button-normal {
+  opacity: 0;
+}
+
+#bulletin-board .bn-art-button.bn-has-hover:not(:disabled):focus-visible
+.bn-button-hover {
+  opacity: 1;
+}
+
+/* Размер кнопки «Оставить записку» на доске */
+#bulletin-board #bn-new {
+  width: clamp(180px, 24vw, 280px);
+}
+
+/* Размер «Отмены» в правом верхнем углу */
+#bulletin-board #bn-cancel {
+  width: clamp(120px, 16vw, 190px);
+}
+
+/*
+ * Все стикеры показываются без внутреннего скроллбара.
+ * Прокручивается сама страница.
+ */
+#bulletin-board .bn-stickers {
+  max-height: none;
+  height: auto;
+  overflow: visible;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(64px, 1fr));
+
+  gap: 8px;
+}
+
+/* Галерея не выходит за ширину красной панели */
+#bulletin-board .bn-stickers,
+#bulletin-board .bn-papers,
+#bulletin-board .bn-editor-grid {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 760px) {
+  #bulletin-board .bn-editor-top {
+    margin-bottom: 16px;
+  }
+
+  #bulletin-board #bn-cancel {
+    width: 130px;
+  }
+
+  #bulletin-board .bn-stickers {
+    grid-template-columns:
+      repeat(auto-fill, minmax(56px, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #bulletin-board .bn-art-button > img {
+    transition: none;
+  }
+}
+/* ===== Фон редактора и верхняя строка ===== */
+
+#bulletin-board #bn-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 24px;
+  row-gap: 24px;
+
+  /* Одна картинка растягивается на всю панель */
+  background-color: transparent;
+  background-image: var(--bn-panel, url("./assets/doska/fon.png"));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+/* Остальные части редактора занимают всю ширину */
+#bulletin-board #bn-editor > * {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+/* «Выбрать бумагу» — слева в первой строке */
+#bulletin-board #bn-editor > #bn-paper-heading {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  justify-self: start;
+
+  display: block;
+  width: min(420px, 100%);
+  max-width: 100%;
+  height: auto;
+  max-height: none;
+
+  margin: 0;
+}
+
+/* «Отмена» — справа в той же строке */
+#bulletin-board #bn-editor > .bn-editor-top {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+/* Галерея бумаги идёт сразу под верхней строкой */
+#bulletin-board #bn-editor > #bn-papers {
+  grid-row: 2;
+  margin-top: 0;
+}
+
+/* Размер кнопки, включая мобильную версию */
+#bulletin-board #bn-editor #bn-cancel {
+  width: clamp(100px, 16vw, 190px);
+  margin: 0;
+}
+
+/* Заголовок стикеров не создаёт лишних внешних отступов */
+#bulletin-board #bn-editor > #bn-sticker-heading {
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  #bulletin-board #bn-editor {
+    column-gap: 12px;
+    row-gap: 16px;
+  }
+}
+/* ===== Редактор: выделение, ввод текста и ползунки ===== */
+
+#bulletin-board {
+  --bn-accent: #516D79;
+}
+
+/*
+ * Тонкая пунктирная рамка.
+ * Прозрачная рамка в обычном состоянии сохраняет размеры кнопок.
+ */
+#bulletin-board #bn-editor .bn-paper-choice,
+#bulletin-board #bn-editor .bn-sticker-choice {
+  border: 1px dashed transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Выбранная бумага и выбранный стикер */
+#bulletin-board #bn-editor
+.bn-paper-choice[aria-pressed="true"],
+
+#bulletin-board #bn-editor
+.bn-sticker-choice[aria-pressed="true"] {
+  border: 1px dashed var(--bn-accent);
+  box-shadow: none;
+}
+
+/* Наведение мышью */
+@media (hover: hover) {
+  #bulletin-board #bn-editor .bn-paper-choice:hover,
+  #bulletin-board #bn-editor .bn-sticker-choice:hover {
+    border: 1px dashed var(--bn-accent);
+    opacity: 1;
+  }
+}
+
+/* Выбор с клавиатуры */
+#bulletin-board #bn-editor .bn-paper-choice:focus-visible,
+#bulletin-board #bn-editor .bn-sticker-choice:focus-visible {
+  border-color: var(--bn-accent);
+  outline: 1px dashed var(--bn-accent);
+  outline-offset: 3px;
+}
+
+/* Выделение текста и стикера в предпросмотре */
+#bulletin-board #bn-preview .bn-active-part {
+  outline: 1px dashed var(--bn-accent);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/*
+ * Фон поля ввода.
+ * Картинка растягивается на размер поля, не повторяется.
+ */
+#bulletin-board #bn-editor #bn-text {
+  width: 100%;
+  min-height: 190px;
+
+  padding: 20px;
+  border: 1px dashed transparent;
+  border-radius: 0;
+
+  background-color: transparent;
+  background-image: url("./assets/doska/fon-tekst.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
+  color: var(--bn-ink, #292a25);
+  font: inherit;
+  line-height: 1.5;
+
+  box-shadow: none;
+  resize: vertical;
+}
+
+#bulletin-board #bn-editor #bn-text:focus-visible {
+  outline: 1px dashed var(--bn-accent);
+  outline-offset: 3px;
+}
+
+/* Убираем кнопку удаления и пояснение под ней */
+#bulletin-board #bn-editor #bn-remove-sticker,
+#bulletin-board #bn-editor .bn-fields > .bn-help {
+  display: none !important;
+}
+
+/*
+ * Ползунки без прямоугольной рамки.
+ * И дорожка, и бегунок используют #516D79.
+ */
+#bulletin-board #bn-editor input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+
+  display: block;
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+
+  margin: 0;
+  padding: 0;
+
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+
+  accent-color: var(--bn-accent);
+  cursor: pointer;
+}
+
+/* Chrome, Edge, Safari: дорожка */
+#bulletin-board #bn-editor
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border: 0;
+  border-radius: 0;
+  background: var(--bn-accent);
+}
+
+/* Chrome, Edge, Safari: бегунок */
+#bulletin-board #bn-editor
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 18px;
+  height: 18px;
+  margin-top: -7px;
+
+  border: 0;
+  border-radius: 50%;
+  background: var(--bn-accent);
+  box-shadow: none;
+}
+
+/* Firefox: дорожка */
+#bulletin-board #bn-editor
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  border: 0;
+  border-radius: 0;
+  background: var(--bn-accent);
+}
+
+/* Firefox: заполненная часть дорожки */
+#bulletin-board #bn-editor
+input[type="range"]::-moz-range-progress {
+  height: 4px;
+  background: var(--bn-accent);
+}
+
+/* Firefox: бегунок */
+#bulletin-board #bn-editor
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+
+  border: 0;
+  border-radius: 50%;
+  background: var(--bn-accent);
+  box-shadow: none;
+}
+
+/* Фокус показывается только при управлении клавиатурой */
+#bulletin-board #bn-editor
+input[type="range"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+#bulletin-board #bn-editor
+input[type="range"]:focus-visible {
+  outline: 1px dashed var(--bn-accent);
+  outline-offset: 3px;
+}
+
+/* Если стикер не выбран, его ползунок недоступен */
+#bulletin-board #bn-editor input[type="range"]:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+/* Новая PNG-кнопка перехода к размещению */
+#bulletin-board #bn-editor #bn-place {
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-self: center;
+
+  width: min(100%, 340px);
+  min-width: 44px;
+  min-height: 44px;
+
+  margin-top: 16px;
+  padding: 0;
+
+  border: 0;
+  background: none;
+  box-shadow: none;
+  line-height: 0;
+}
+
+#bulletin-board #bn-editor #bn-place > img {
+  grid-area: 1 / 1;
+
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+
+  margin: 0;
+  object-fit: contain;
+}
+
+/* Недоступная отмена не получает ховер */
+#bulletin-board #bn-editor #bn-cancel:disabled {
+  opacity: .4;
+  cursor: default;
+}
+/* ===== Неактивная «Отмена» ===== */
+
+#bulletin-board #bn-cancel .bn-button-disabled {
+  grid-area: 1 / 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Не затемняем готовое неактивное изображение */
+#bulletin-board #bn-editor #bn-cancel:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+/* В неактивном состоянии скрываем обычную кнопку и ховер */
+#bulletin-board #bn-editor
+#bn-cancel.bn-is-disabled > .bn-button-normal,
+
+#bulletin-board #bn-editor
+#bn-cancel.bn-is-disabled > .bn-button-hover {
+  opacity: 0 !important;
+}
+
+#bulletin-board #bn-editor
+#bn-cancel.bn-is-disabled > .bn-button-disabled {
+  opacity: 1 !important;
+}
+
+
+/* ===== Нижняя голубая кнопка исходного размера ===== */
+
+/*
+ * Не растягиваем до 340px или до ширины колонки.
+ * На узком экране разрешаем только уменьшение.
+ */
+#bulletin-board #bn-editor #bn-place {
+  display: inline-grid;
+  justify-self: center;
+
+  width: var(--bn-placement-width, max-content);
+  max-width: 100%;
+
+  min-width: 0;
+  min-height: 44px;
+
+  margin-top: 16px;
+  padding: 0;
+
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+#bulletin-board #bn-editor
+#bn-place > .bn-button-normal {
+  display: block;
+
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+
+  margin: 0;
+  object-fit: contain;
+}
+
+
+/* ===== Убираем выделенный служебный блок ===== */
+
+/*
+ * Элементы остаются в документе, потому что старые функции
+ * обновляют координаты и состояние кнопок.
+ * Визуально панель полностью скрыта.
+ */
+#bulletin-board #bn-position {
+  display: none !important;
+}
+
+
+/* ===== Публикация справа сверху ===== */
+
+#bulletin-board .bn-toolbar {
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Размер новой PNG-кнопки публикации */
+#bulletin-board #bn-publish {
+  width: clamp(180px, 24vw, 280px);
+  max-width: 100%;
+
+  min-width: 44px;
+  min-height: 44px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* Сохраняем естественные пропорции обоих состояний */
+#bulletin-board #bn-publish > img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Во время запроса к базе кнопка недоступна */
+#bulletin-board #bn-publish:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+/* Обе кнопки находятся в одном месте справа над доской */
+
+#bulletin-board #bn-board-view > .bn-toolbar {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+
+  width: 100%;
+  min-height: 100px;
+
+  /* Опускаем кнопки в отмеченную область */
+  padding-top: 32px;
+  padding-right: 16px;
+  padding-bottom: 16px;
+  padding-left: 16px;
+
+  margin: 0;
+  gap: 12px;
+}
+
+/* Одинаковое положение и размер */
+#bulletin-board .bn-toolbar #bn-new,
+#bulletin-board .bn-toolbar #bn-publish {
+  position: static;
+  inset: auto;
+  transform: none;
+
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr);
+
+  width: clamp(180px, 24vw, 280px);
+  max-width: 100%;
+  min-width: 44px;
+  min-height: 44px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* Не даём display: inline-grid отменить hidden */
+#bulletin-board .bn-toolbar #bn-new[hidden],
+#bulletin-board .bn-toolbar #bn-publish[hidden] {
+  display: none !important;
+}
+
+#bulletin-board .bn-toolbar #bn-new > img,
+#bulletin-board .bn-toolbar #bn-publish > img {
+  grid-area: 1 / 1;
+
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+
+  object-fit: contain;
+}
+
+/* Служебный блок координат остаётся скрытым */
+#bulletin-board #bn-position {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  #bulletin-board #bn-board-view > .bn-toolbar {
+    min-height: 80px;
+    padding-top: 20px;
+    padding-right: 8px;
+    padding-bottom: 12px;
+    padding-left: 8px;
+  }
+}
+/* Нижняя кнопка редактора — компактный размер */
+#bulletin-board #bn-editor #bn-place {
+  width: clamp(140px, 14vw, 250px) !important;
+  max-width: 100%;
+  justify-self: center;
+}
+
+#bulletin-board #bn-editor #bn-place > img {
+  width: 100%;
+  height: auto;
+}
+/* Скрываем старую верхнюю панель действий */
+#bulletin-board .bn-toolbar[aria-hidden="true"] {
+  display: none !important;
+}
+
+/* Контейнер ползунков и нижней кнопки */
+#bulletin-board .bn-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  column-gap: 24px;
+  row-gap: 18px;
+}
+
+/* Подписи и их контролы занимают всю ширину */
+#bulletin-board .bn-fields > label,
+#bulletin-board .bn-fields > .bn-help,
+#bulletin-board .bn-fields > #bn-captcha {
+  grid-column: 1 / -1;
+}
+
+/* Кнопка — последняя колонка нижней строки */
+#bulletin-board .bn-fields > #bn-place {
+  grid-column: 2;
+  justify-self: end;
+  align-self: end;
+
+  width: var(--bn-place-width, 220px);
+  max-width: 100%;
+  min-width: 0;
+  min-height: 44px;
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* Картинка кнопки сохраняет свои пропорции */
+#bulletin-board #bn-place > img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  object-fit: contain;
+}
+
+/* Не растягиваем кнопку по ширине всей колонки */
+#bulletin-board #bn-place {
+  justify-self: end;
+}
+
+/* Мобильный редактор */
+@media (max-width: 760px) {
+  #bulletin-board .bn-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #bulletin-board .bn-fields > #bn-place {
+    grid-column: 1;
+    justify-self: center;
+  }
+}
+/* Скрываем системную плашку вместе с её отступами */
+#bulletin-board #bn-status {
+  display: none !important;
+}
+/* Отступ над красной панелью редактора */
+#bulletin-board #bn-editor {
+  margin-top: clamp(100px, 10vw, 160px);
+}
