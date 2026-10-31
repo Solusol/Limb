@@ -1,8 +1,8 @@
 "use strict";
 
 window.LIMB_BOARD = {
-  supabaseUrl: "ВСТАВЬ_PROJECT_URL",
-  publicKey: "ВСТАВЬ_PUBLISHABLE_ИЛИ_ANON_KEY",
+supabaseUrl: "https://quwquigejhdkymoydjji.supabase.co",
+publicKey: "sb_publishable_KUbZ6TNlUyheema5GoDcWQ_Ie6g7Sys",
 
   // Публичный site key Turnstile, если CAPTCHA включена в Supabase.
   captchaSiteKey: "",
