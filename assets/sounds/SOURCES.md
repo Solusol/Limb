@@ -18,3 +18,6 @@
   https://opengameart.org/content/wind1
 - ambience-hum — JaggedStone, «Loopable Dungeon Ambience», низкий гул с каплями
   https://opengameart.org/content/loopable-dungeon-ambience
+- ambience-storm — WuxiaScrub, «Rain + Long Thunder» (rain-thunder.ogg);
+  дождь зациклен, гром вмешан дважды с пониженной громкостью
+  https://opengameart.org/content/rain-long-thunder

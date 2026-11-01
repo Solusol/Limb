@@ -28,9 +28,10 @@
     /*
       Фоновая дорожка. Файлы лежат парами: .ogg и .mp3,
       браузер выбирает поддерживаемый формат.
-      Варианты: "ambience-wind" — ветер, "ambience-hum" — низкий гул.
+      Варианты: "ambience-storm" — дождь с грозой,
+      "ambience-wind" — ветер, "ambience-hum" — низкий гул.
     */
-    ambience: "ambience-hum",
+    ambience: "ambience-storm",
 
     effects: {
       click: ["ui-click.mp3"],
