@@ -22,8 +22,11 @@
     /* Громкость фона: 0–1 */
     ambienceVolume: 0.55,
 
-    /* Плавное включение и выключение фона, секунды */
-    ambienceFade: 2.5,
+    /* Плавное включение фона, секунды */
+    ambienceFade: 1.5,
+
+    /* Выключение кнопкой — быстрое, чтобы реакция была сразу */
+    ambienceFadeOut: 0.5,
 
     /*
       Фоновая дорожка. Файлы лежат парами: .ogg и .mp3,
@@ -330,14 +333,19 @@
   const style = document.createElement("style");
   style.id = "limb-sound-styles";
   style.textContent = `
+    /* Пункты меню и кнопка выравниваются по общей средней линии */
+    .site-header nav:has(#sound-ambience) {
+      align-items: center;
+    }
+
     #sound-ambience {
       display: inline-grid;
       grid-template-columns: minmax(0, 1fr);
       align-self: center;
 
-      width: 40px;
-      height: 44px;
-      min-width: 40px;
+      width: 52px;
+      height: 52px;
+      min-width: 44px;
       min-height: 44px;
 
       margin: 0;
@@ -404,8 +412,8 @@
     }
 
     html.is-touch #sound-ambience {
-      width: calc(44px * var(--m, 1));
-      height: calc(44px * var(--m, 1));
+      width: calc(52px * var(--m, 1));
+      height: calc(52px * var(--m, 1));
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -463,7 +471,7 @@
       if (state.ambience) {
         startAmbience();
       } else {
-        stopAmbience();
+        stopAmbience(CONFIG.ambienceFadeOut);
       }
 
       playEffect("switch");
