@@ -3,13 +3,13 @@
 /*
   Звуки Лимба.
 
-  Два независимых переключателя в шапке:
-  «Звуки» — короткие звуки действий,
-  «Атмосфера» — тихий зацикленный фон.
+  Короткие звуки действий включены всегда.
+  Тихий зацикленный фон включён по умолчанию; одна кнопка-динамик
+  в шапке выключает и включает только его.
 
-  По умолчанию сайт тихий. Выбор посетителя запоминается
-  в localStorage, но фон после перезагрузки включается только
-  после первого касания или клика — так требуют браузеры.
+  Выбор посетителя запоминается в localStorage. Браузеры не дают
+  запускать звук без действия человека, поэтому фон стартует
+  после первого касания, клика или нажатия клавиши.
 */
 
 (() => {
@@ -31,7 +31,15 @@
       Варианты: "ambience-storm" — дождь с грозой,
       "ambience-wind" — ветер, "ambience-hum" — низкий гул.
     */
-    ambience: "ambience-storm",
+    ambience: "ambience-hum",
+
+    /* Кнопка фона: обычное состояние, ховер, выключено, выключено + ховер */
+    button: {
+      on: "assets/buttons/zvuk.webp",
+      onHover: "assets/buttons/zvuk-hover.webp",
+      off: "assets/buttons/zvuk-off.webp",
+      offHover: "assets/buttons/zvuk-off-hover.webp"
+    },
 
     effects: {
       click: ["ui-click.mp3"],
@@ -69,7 +77,7 @@
       [".portrait, .cc-card-open", "paperOpen"],
       [".section-picture, .menu-row", "click"],
       ["#map-plus, #map-minus, #map-reset", "clickSoft"],
-      [".sound-toggle", null],
+      ["#sound-ambience", null],
       [
         "a[href^='#'], .image-button, .text-button, .back-link, " +
         ".bn-art-button, #bn-new, #bn-place, #bn-cancel, .cc-icon-select, " +
@@ -82,8 +90,8 @@
   const STORAGE_KEY = "limb-sound";
 
   const state = {
-    effects: false,
-    ambience: false,
+    effects: true,
+    ambience: true,
     context: null,
     buffers: new Map(),
     pending: new Map(),
@@ -103,10 +111,9 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
       const saved = JSON.parse(raw);
-      state.effects = Boolean(saved.effects);
-      state.ambience = Boolean(saved.ambience);
+      if (typeof saved.ambience === "boolean") state.ambience = saved.ambience;
     } catch {
-      /* Хранилище недоступно — остаёмся в тишине */
+      /* Хранилище недоступно — остаёмся с настройками по умолчанию */
     }
   }
 
@@ -114,7 +121,7 @@
     try {
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ effects: state.effects, ambience: state.ambience })
+        JSON.stringify({ ambience: state.ambience })
       );
     } catch {
       /* Ничего страшного: настройка проживёт до перезагрузки */
@@ -314,98 +321,118 @@
     }
   });
 
-  /* ---------- Переключатели в шапке ---------- */
+  /* ---------- Кнопка фона в шапке ---------- */
 
   const style = document.createElement("style");
   style.id = "limb-sound-styles";
   style.textContent = `
     .sound-controls {
       display: flex;
-      flex-wrap: wrap;
       justify-content: flex-end;
-      gap: 0 var(--s4, 16px);
       margin-top: 4px;
     }
 
-    .sound-toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    #sound-ambience {
+      display: inline-grid;
+      grid-template-columns: minmax(0, 1fr);
 
+      width: 48px;
+      height: 48px;
+      min-width: 44px;
       min-height: 44px;
+
       margin: 0;
       padding: 0;
 
       border: 0;
       background: transparent;
       box-shadow: none;
-
-      color: inherit;
-      font: inherit;
-      text-transform: inherit;
-      letter-spacing: inherit;
+      line-height: 0;
       cursor: pointer;
     }
 
-    .sound-toggle-label {
-      text-decoration: underline;
-      text-underline-offset: 5px;
+    #sound-ambience > img {
+      grid-area: 1 / 1;
+
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+
+      opacity: 0;
+      transition: opacity 160ms ease;
     }
 
-    .sound-toggle .sound-toggle-state::before {
-      content: "выкл.";
+    /* Фон включён: обычная картинка */
+    #sound-ambience[aria-pressed="true"] > .sound-on {
+      opacity: 1;
     }
 
-    .sound-toggle[aria-pressed="true"] .sound-toggle-state::before {
-      content: "вкл.";
+    /* Фон выключен: перечёркнутый динамик */
+    #sound-ambience[aria-pressed="false"] > .sound-off {
+      opacity: 1;
     }
 
-    .sound-toggle[aria-pressed="true"] .sound-toggle-label {
-      text-decoration-style: double;
+    @media (hover: hover) {
+      #sound-ambience[aria-pressed="true"]:hover > .sound-on,
+      #sound-ambience[aria-pressed="false"]:hover > .sound-off {
+        opacity: 0;
+      }
+
+      #sound-ambience[aria-pressed="true"]:hover > .sound-on-hover,
+      #sound-ambience[aria-pressed="false"]:hover > .sound-off-hover {
+        opacity: 1;
+      }
     }
 
-    .sound-toggle:focus-visible {
+    /* Нажатие пальцем и управление клавиатурой */
+    #sound-ambience[aria-pressed="true"]:is(:active, .tap, :focus-visible) > .sound-on,
+    #sound-ambience[aria-pressed="false"]:is(:active, .tap, :focus-visible) > .sound-off {
+      opacity: 0;
+    }
+
+    #sound-ambience[aria-pressed="true"]:is(:active, .tap, :focus-visible) > .sound-on-hover,
+    #sound-ambience[aria-pressed="false"]:is(:active, .tap, :focus-visible) > .sound-off-hover {
+      opacity: 1;
+    }
+
+    #sound-ambience:focus-visible {
       outline: 1px dashed currentColor;
       outline-offset: 4px;
     }
 
-    @media (hover: hover) {
-      .sound-toggle:hover {
-        opacity: .75;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .sound-controls {
-        gap: 0 var(--s3, 12px);
-      }
+    html.is-touch #sound-ambience {
+      width: 56px;
+      height: 56px;
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .sound-toggle {
+      #sound-ambience > img {
         transition: none;
       }
     }
   `;
   document.head.append(style);
 
-  function makeToggle(id, label, pressed) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.id = id;
-    button.className = "sound-toggle";
-    button.setAttribute("aria-pressed", String(pressed));
+  function buttonImage(src, className) {
+    const img = new Image(80, 80);
+    img.src = src;
+    img.alt = "";
+    img.className = className;
+    img.decoding = "async";
+    return img;
+  }
 
-    const text = document.createElement("span");
-    text.className = "sound-toggle-label";
-    text.textContent = `${label}: `;
-
-    const stateSpan = document.createElement("span");
-    stateSpan.className = "sound-toggle-state";
-
-    text.append(stateSpan);
-    button.append(text);
-    return button;
+  function syncButton(button) {
+    button.setAttribute("aria-pressed", String(state.ambience));
+    button.setAttribute(
+      "aria-label",
+      state.ambience ? "Фоновый звук включён. Выключить" : "Фоновый звук выключен. Включить"
+    );
+    button.title = state.ambience ? "Выключить фон" : "Включить фон";
   }
 
   function mountControls() {
@@ -417,29 +444,24 @@
 
     const wrap = document.createElement("div");
     wrap.className = "sound-controls";
-    wrap.setAttribute("role", "group");
-    wrap.setAttribute("aria-label", "Звук на сайте");
 
-    const effectsToggle = makeToggle("sound-effects", "Звуки", state.effects);
-    const ambienceToggle = makeToggle("sound-ambience", "Атмосфера", state.ambience);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = "sound-ambience";
 
-    effectsToggle.addEventListener("click", () => {
-      state.effects = !state.effects;
-      state.unlocked = true;
-      effectsToggle.setAttribute("aria-pressed", String(state.effects));
-      savePreference();
+    button.append(
+      buttonImage(CONFIG.button.on, "sound-on"),
+      buttonImage(CONFIG.button.onHover, "sound-on-hover"),
+      buttonImage(CONFIG.button.off, "sound-off"),
+      buttonImage(CONFIG.button.offHover, "sound-off-hover")
+    );
 
-      if (state.effects) {
-        context();
-        preloadEffects();
-        playEffect("switch");
-      }
-    });
+    syncButton(button);
 
-    ambienceToggle.addEventListener("click", () => {
+    button.addEventListener("click", () => {
       state.ambience = !state.ambience;
       state.unlocked = true;
-      ambienceToggle.setAttribute("aria-pressed", String(state.ambience));
+      syncButton(button);
       savePreference();
 
       if (state.ambience) {
@@ -451,7 +473,7 @@
       playEffect("switch");
     });
 
-    wrap.append(effectsToggle, ambienceToggle);
+    wrap.append(button);
     host.append(wrap);
   }
 
@@ -545,10 +567,8 @@
   function unlock() {
     state.unlocked = true;
 
-    if (state.effects) {
-      context();
-      preloadEffects();
-    }
+    context();
+    preloadEffects();
 
     if (state.ambience) startAmbience();
 
