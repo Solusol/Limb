@@ -30,7 +30,7 @@
       браузер выбирает поддерживаемый формат.
       Варианты: "ambience-wind" — ветер, "ambience-hum" — низкий гул.
     */
-    ambience: "ambience-wind",
+    ambience: "ambience-hum",
 
     effects: {
       click: ["ui-click.mp3"],
