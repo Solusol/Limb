@@ -5,8 +5,9 @@
   появляются по буквам, как будто печатаются.
 
   Анимация идёт один раз за открытие страницы — когда главная
-  впервые становится видимой. При включённом в системе
-  «уменьшении движения» текст показывается сразу.
+  впервые становится видимой. Системная настройка «уменьшить
+  движение» здесь не учитывается: эффект не связан с движением
+  элементов, буквы просто проявляются на своих местах.
 */
 
 (() => {
@@ -15,9 +16,6 @@
   const home = document.getElementById("home");
 
   if (!title || !note || !home) return;
-
-  const reduceMotion =
-    matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const SETTINGS = {
     /* Пауза перед первой буквой */
@@ -68,7 +66,7 @@
     }
 
     .type-cursor.is-blinking {
-      animation: type-cursor-blink 1s steps(1, end) infinite;
+      animation: type-cursor-blink 1s steps(1, end) infinite !important;
     }
 
     @keyframes type-cursor-blink {
@@ -135,19 +133,8 @@
     }
   }
 
-  function showInstantly(parts) {
-    parts.spans.forEach(span => span.classList.add("is-shown"));
-    parts.cursor.remove();
-  }
-
   const titleParts = splitToChars(title);
   const noteParts = splitToChars(note);
-
-  if (reduceMotion) {
-    showInstantly(titleParts);
-    showInstantly(noteParts);
-    return;
-  }
 
   let started = false;
 
