@@ -28,8 +28,8 @@
     /*
       Фоновая дорожка. Файлы лежат парами: .ogg и .mp3,
       браузер выбирает поддерживаемый формат.
-      Варианты: "ambience-storm" — дождь с грозой,
-      "ambience-wind" — ветер, "ambience-hum" — низкий гул.
+      Варианты: "ambience-hum" — низкий гул с каплями,
+      "ambience-storm" — дождь с грозой, "ambience-wind" — ветер.
     */
     ambience: "ambience-hum",
 
@@ -161,8 +161,12 @@
 
   const preferOgg = canPlay("audio/ogg; codecs=vorbis");
 
+  const ambienceTrack = Array.isArray(CONFIG.ambience)
+    ? pick(CONFIG.ambience)
+    : CONFIG.ambience;
+
   function ambienceFile() {
-    return BASE + CONFIG.ambience + (preferOgg ? ".ogg" : ".mp3");
+    return BASE + ambienceTrack + (preferOgg ? ".ogg" : ".mp3");
   }
 
   function loadBuffer(url) {
@@ -326,19 +330,14 @@
   const style = document.createElement("style");
   style.id = "limb-sound-styles";
   style.textContent = `
-    .sound-controls {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 4px;
-    }
-
     #sound-ambience {
       display: inline-grid;
       grid-template-columns: minmax(0, 1fr);
+      align-self: center;
 
-      width: 48px;
-      height: 48px;
-      min-width: 44px;
+      width: 40px;
+      height: 44px;
+      min-width: 40px;
       min-height: 44px;
 
       margin: 0;
@@ -405,8 +404,8 @@
     }
 
     html.is-touch #sound-ambience {
-      width: 56px;
-      height: 56px;
+      width: calc(44px * var(--m, 1));
+      height: calc(44px * var(--m, 1));
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -437,13 +436,10 @@
 
   function mountControls() {
     const host =
-      document.querySelector(".site-header .external-links") ||
+      document.querySelector(".site-header nav") ||
       document.querySelector(".site-header");
 
-    if (!host || document.querySelector(".sound-controls")) return;
-
-    const wrap = document.createElement("div");
-    wrap.className = "sound-controls";
+    if (!host || document.getElementById("sound-ambience")) return;
 
     const button = document.createElement("button");
     button.type = "button";
@@ -473,8 +469,8 @@
       playEffect("switch");
     });
 
-    wrap.append(button);
-    host.append(wrap);
+    /* Первой в верхнем меню, перед «Библией» */
+    host.prepend(button);
   }
 
   /* ---------- Привязка к действиям ---------- */
