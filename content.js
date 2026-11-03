@@ -5,7 +5,7 @@ window.LIMB = {
 
   links: {
     ficbook:
-      "https://ficbook.net/readfic/019fc4c0-555b-7238-b775-b492a66afa89#part_content",
+      "https://ficbook.net/authors/8569511",
     tiktok:
       "https://www.tiktok.com/@ssolusol?_r=1&_t=ZT-9AqvDOtrwZZ"
   },
