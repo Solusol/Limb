@@ -1,0 +1,263 @@
+/*
+  Лимб: анимации взаимодействий.
+  Подключать после остальных таблиц стилей.
+  Логика — в animations.js.
+*/
+
+:root {
+  --la-accent: #516d79;
+  --la-ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+
+/* ===== 1. Мягкая смена страниц ===== */
+
+/* Новый раздел проявляется без движения и без вспышки */
+.page:not([hidden]) {
+  animation: la-page-in 380ms ease-out both;
+}
+
+/* Старый раздел быстро гаснет перед переходом */
+.page.la-leaving {
+  animation: la-page-out 170ms ease-in both !important;
+  pointer-events: none;
+}
+
+@keyframes la-page-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes la-page-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+
+/* ===== 2. Приподнятая обложка ===== */
+
+@media (hover: hover) and (pointer: fine) {
+  #home .section-picture,
+  .characters-grid .portrait,
+  #cc-card .cc-card-art {
+    transition:
+      transform 260ms var(--la-ease),
+      translate 260ms var(--la-ease),
+      filter 260ms ease;
+    will-change: transform;
+  }
+
+  /* Наклон следует за курсором: углы задаёт animations.js */
+  #home .section-picture:hover,
+  .characters-grid .portrait:hover,
+  #cc-card .cc-card-art:hover {
+    translate: 0 -8px;
+    transform:
+      perspective(900px)
+      rotateX(var(--la-rx, 2.5deg))
+      rotateY(var(--la-ry, -2.5deg));
+  }
+}
+
+
+/* ===== 3. Профайл → мудборд ===== */
+
+/* Слепок прежней композиции на время растворения */
+#character .character-sheet .la-sheet-ghost {
+  grid-area: 1 / 1;
+  position: relative;
+  z-index: 1;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+  object-position: center top;
+  pointer-events: none;
+}
+
+.view-dots button img {
+  transition: scale 240ms var(--la-ease), opacity 240ms ease;
+}
+
+.view-dots button[aria-pressed="true"] img {
+  scale: 1.08;
+}
+
+
+/* ===== 6. Выбор бумаги ===== */
+
+#bulletin-board #bn-editor #bn-papers .bn-paper-choice {
+  transform-origin: center;
+  transition:
+    transform 240ms var(--la-ease),
+    border-color 280ms ease,
+    opacity 200ms ease;
+}
+
+#bulletin-board #bn-editor #bn-papers .bn-paper-choice[aria-pressed="true"] {
+  transform: scale(1.06);
+  border-color: var(--la-accent);
+}
+
+
+/* ===== 7 и 9. Стикеры в предпросмотре ===== */
+
+/* Призрак удалённого стикера при отмене добавления */
+#bulletin-board .bn-preview .la-ghost {
+  pointer-events: none;
+  z-index: 2;
+}
+
+#bulletin-board .bn-preview .la-paper-ghost {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+  pointer-events: none;
+}
+
+
+/* ===== 8. Поднятие записки ===== */
+
+#bulletin-board .bn-world > .bn-note.movable {
+  transition:
+    translate 180ms var(--la-ease),
+    scale 180ms var(--la-ease),
+    filter 220ms ease;
+}
+
+#bulletin-board .bn-world > .bn-note.la-lifted {
+  z-index: 5;
+  translate: 0 -4px;
+  scale: 1.025;
+  filter: drop-shadow(0 10px 12px rgb(0 0 0 / 42%));
+  cursor: grabbing;
+}
+
+
+/* ===== 10. Подтверждение публикации ===== */
+
+#bulletin-board .bn-world > .bn-note.la-published {
+  outline: 3px dashed transparent;
+  outline-offset: 5px;
+  animation:
+    la-pin 440ms var(--la-ease) both,
+    la-dash-out 560ms ease-out both;
+}
+
+@keyframes la-pin {
+  0% {
+    scale: 1.04;
+    filter: drop-shadow(0 8px 10px rgb(0 0 0 / 40%));
+  }
+
+  60% {
+    scale: .985;
+    filter: drop-shadow(0 2px 3px rgb(0 0 0 / 20%));
+  }
+
+  100% {
+    scale: 1;
+    filter: none;
+  }
+}
+
+@keyframes la-dash-out {
+  from { outline-color: var(--bn-rust, #793b29); }
+  to { outline-color: transparent; }
+}
+
+
+/* ===== 11. Плавное увеличение карты ===== */
+
+/* Класс ставится только на время нажатия «+» или «−» */
+.lm-map.la-smooth,
+#map-layer.la-smooth {
+  transition: transform 340ms var(--la-ease);
+}
+
+
+/* ===== 12. Хронология по пунктам ===== */
+
+#origin-list > li,
+#rules-list > li {
+  transition:
+    opacity 520ms ease-out,
+    translate 520ms var(--la-ease);
+  transition-delay: var(--la-delay, 0ms);
+}
+
+/* Скрываем пункты только когда скрипт готов их показать */
+html.la-reveal-ready #origin-list > li:not(.la-seen),
+html.la-reveal-ready #rules-list > li:not(.la-seen) {
+  opacity: 0;
+  translate: 0 8px;
+}
+
+
+/* ===== 13. Рябь разлома ===== */
+
+html.la-rift-ready .hero-creature,
+html.la-rift-ready .article-art {
+  cursor: pointer;
+}
+
+.la-rippling {
+  filter: url("#la-rift");
+}
+
+
+/* ===== Уменьшение движения ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .page:not([hidden]),
+  .page.la-leaving,
+  #bulletin-board .bn-world > .bn-note.la-published {
+    animation: none !important;
+  }
+
+  #home .section-picture,
+  .characters-grid .portrait,
+  #cc-card .cc-card-art,
+  .view-dots button img,
+  #bulletin-board #bn-editor #bn-papers .bn-paper-choice,
+  #bulletin-board .bn-world > .bn-note.movable,
+  .lm-map.la-smooth,
+  #map-layer.la-smooth,
+  #origin-list > li,
+  #rules-list > li {
+    transition: none !important;
+  }
+
+  #home .section-picture:hover,
+  .characters-grid .portrait:hover,
+  #cc-card .cc-card-art:hover {
+    transform: none;
+    translate: none;
+  }
+
+  #bulletin-board #bn-editor #bn-papers .bn-paper-choice[aria-pressed="true"] {
+    transform: none;
+  }
+
+  #bulletin-board .bn-world > .bn-note.la-lifted {
+    translate: none;
+    scale: none;
+  }
+
+  html.la-reveal-ready #origin-list > li:not(.la-seen),
+  html.la-reveal-ready #rules-list > li:not(.la-seen) {
+    opacity: 1;
+    translate: none;
+  }
+
+  .la-rippling {
+    filter: none;
+  }
+}
