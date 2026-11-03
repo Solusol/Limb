@@ -726,6 +726,36 @@
 
     document.documentElement.classList.add("la-rift-ready");
 
+    /*
+      Первое применение фильтра в браузере стоит дорого:
+      прогреваем его на крошечном невидимом элементе,
+      чтобы первая рябь на иллюстрации не запнулась.
+    */
+    function warmUp() {
+      const probe = document.createElement("div");
+
+      probe.setAttribute("aria-hidden", "true");
+      probe.style.cssText =
+        "position:fixed;left:-20px;top:-20px;width:4px;height:4px;" +
+        "background:#555;pointer-events:none;filter:url('#la-rift');";
+
+      document.body.append(probe);
+      displace.setAttribute("scale", "1");
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          displace.setAttribute("scale", "0");
+          probe.remove();
+        });
+      });
+    }
+
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(warmUp, { timeout: 4000 });
+    } else {
+      setTimeout(warmUp, 2500);
+    }
+
     const DURATION = 650;
     const AMPLITUDE = 16;
     let active = null;
