@@ -1,0 +1,59 @@
+name: Extend bulletin board
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/extend-board.yml']
+permissions:
+  contents: write
+concurrency:
+  group: extend-bulletin-board
+  cancel-in-progress: false
+jobs:
+  extend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply guarded board extension
+        shell: python
+        run: |
+          import hashlib, pathlib
+          path = pathlib.Path('board.js')
+          raw = path.read_bytes()
+          blob = hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+          if blob != 'db85fabb967dbd658306963ff5efa77bf5af5f92':
+              raise SystemExit('board.js changed since review; refusing to overwrite')
+          text = raw.decode('utf-8')
+          def replace_once(old, new):
+              global text
+              if text.count(old) != 1:
+                  raise SystemExit('Unexpected source structure: ' + old)
+              text = text.replace(old, new, 1)
+          replace_once('  const H = 1600;', '  const H = 4800;')
+          replace_once('      sy: H / rect.height,', '      sy: H / rect.height,\n      scrollY: window.scrollY,')
+          replace_once('    const d = boardDrag;\n    const dx = event.clientX - d.px;\n    const dy = event.clientY - d.py;', '    const d = boardDrag;\n    const dx = event.clientX - d.px;\n    const dy = event.clientY - d.py + window.scrollY - d.scrollY;')
+          css = '\n#bulletin-board .bn-cork {\n  aspect-ratio: auto;\n  height: auto;\n  background-repeat: repeat-y;\n  background-size: 100% auto;\n  background-position: center top;\n}\n#bulletin-board #bn-board-view {\n  position: relative;\n  inset: auto;\n  height: auto;\n}\n#bulletin-board #bn-board-view[hidden] {\n  display: none !important;\n}\n#bulletin-board #bn-board-view > .bn-scroll {\n  flex: 0 0 auto;\n  overflow: visible !important;\n}\n#bulletin-board #bn-world {\n  width: 100%;\n  height: auto;\n  aspect-ratio: 1 / 4;\n}\n'
+          replace_once('  document.head.append(style);', '  style.textContent += `' + css + '`;\n\n  document.head.append(style);')
+          index_path = pathlib.Path('index.html')
+          index_raw = index_path.read_bytes()
+          old = b'src="./board.js"'
+          new = b'src="./board.js?v=board-height-4800"'
+          if index_raw.count(old) != 1:
+              raise SystemExit('Unexpected board script tag; refusing to change files')
+          path.write_bytes(text.encode('utf-8'))
+          index_path.write_bytes(index_raw.replace(old, new, 1))
+      - name: Check updated JavaScript syntax
+        run: node --check board.js
+      - name: Commit only reviewed application files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- board.js index.html
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: extend bulletin board to 4800 without moving existing notes'
+          git push origin HEAD:main
