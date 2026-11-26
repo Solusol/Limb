@@ -16,7 +16,7 @@
   }
 
   const W = 1200;
-  const H = 4800;
+  const H = 1600;
 
   const ART = {
     background: C.assets?.background || "doska-fon.webp",
@@ -666,33 +666,6 @@
     }
   `;
 
-  style.textContent += `
-#bulletin-board .bn-cork {
-  aspect-ratio: auto;
-  height: auto;
-  background-repeat: repeat-y;
-  background-size: 100% auto;
-  background-position: center top;
-}
-#bulletin-board #bn-board-view {
-  position: relative;
-  inset: auto;
-  height: auto;
-}
-#bulletin-board #bn-board-view[hidden] {
-  display: none !important;
-}
-#bulletin-board #bn-board-view > .bn-scroll {
-  flex: 0 0 auto;
-  overflow: visible !important;
-}
-#bulletin-board #bn-world {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 4;
-}
-`;
-
   document.head.append(style);
 
   /* ---------- Окно чтения ---------- */
@@ -1173,7 +1146,6 @@
       y: row.y,
       sx: W / rect.width,
       sy: H / rect.height,
-      scrollY: window.scrollY,
       moved: false
     };
 
@@ -1186,7 +1158,7 @@
 
     const d = boardDrag;
     const dx = event.clientX - d.px;
-    const dy = event.clientY - d.py + window.scrollY - d.scrollY;
+    const dy = event.clientY - d.py;
 
     if (Math.abs(dx) + Math.abs(dy) > 4) d.moved = true;
 
