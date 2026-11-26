@@ -1,0 +1,220 @@
+{
+  "baseline": "7c6a6723691e87e382443663f5c71a29a8e1da20",
+  "current": "c11615313f2abfe8ec48f55ebe1d8248115c334d",
+  "images": {
+    "baseline": {
+      "doska-fon.webp": {
+        "width": 4320,
+        "height": 5274,
+        "sha256": "a41fb19f4931e8a299e2b8dc4317da6dc2b8adca5701059e849eecd1c214330c"
+      },
+      "doska-fon.png": {
+        "width": 1440,
+        "height": 1758,
+        "sha256": "a8e05398baa4f98621dba7f155a7c9db0fd3973745d86a77648c9bf2b48d14c2"
+      }
+    },
+    "current": {
+      "doska-fon.webp": {
+        "width": 1333,
+        "height": 2000,
+        "sha256": "c58f94550e521cd3ab14fd6b00caed048fc93036c32a0c0d7a842ccdbecf7f3c"
+      },
+      "doska-fon.png": {
+        "width": 1333,
+        "height": 2000,
+        "sha256": "04fbb0a777ceb47d34d50620fba0f955a563eac667a5caaddf283333fd0cd193"
+      }
+    }
+  },
+  "cases": [
+    {
+      "file": "baseline-1440-home.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "baseline-1440-characters.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "baseline-1440-board.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "baseline-1440-board-edit.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "baseline-390-home.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "baseline-390-characters.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "baseline-390-board.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "baseline-390-board-edit.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "current-1440-home.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "current-1440-characters.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "current-1440-board.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "current-1440-board-edit.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "current-390-home.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "current-390-characters.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "current-390-board.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "current-390-board-edit.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "published-1440-home.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "published-1440-characters.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "published-1440-board.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "published-1440-board-edit.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "published-390-home.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "published-390-characters.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "published-390-board.json",
+      "ok": true,
+      "page_errors": 0
+    },
+    {
+      "file": "published-390-board-edit.json",
+      "ok": true,
+      "page_errors": 0
+    }
+  ],
+  "comparisons": [
+    {
+      "viewport": 1440,
+      "route": "home",
+      "same_geometry": true
+    },
+    {
+      "viewport": 1440,
+      "route": "characters",
+      "same_geometry": true
+    },
+    {
+      "viewport": 1440,
+      "route": "board",
+      "same_geometry": true
+    },
+    {
+      "viewport": 1440,
+      "route": "board/edit",
+      "same_geometry": true
+    },
+    {
+      "viewport": 390,
+      "route": "home",
+      "same_geometry": true
+    },
+    {
+      "viewport": 390,
+      "route": "characters",
+      "same_geometry": true
+    },
+    {
+      "viewport": 390,
+      "route": "board",
+      "same_geometry": true
+    },
+    {
+      "viewport": 390,
+      "route": "board/edit",
+      "same_geometry": true
+    }
+  ],
+  "published_files": {
+    "index.html": {
+      "repository_sha256": "dc35e7c02a9dd15ec316fc65bf75c0fe2c7f0d005b7f38a0a29ae52bfd585daa",
+      "status": 200,
+      "published_sha256": "dc35e7c02a9dd15ec316fc65bf75c0fe2c7f0d005b7f38a0a29ae52bfd585daa",
+      "matches_repository": true
+    },
+    "board.js": {
+      "repository_sha256": "0362d85b5cf6770caf1825bdf209719494a0469dbdb5ba5b1a60e34eb2ba0ee7",
+      "status": 200,
+      "published_sha256": "0362d85b5cf6770caf1825bdf209719494a0469dbdb5ba5b1a60e34eb2ba0ee7",
+      "matches_repository": true
+    },
+    "board.css": {
+      "repository_sha256": "0cf0e41545fcfd73cf8f418e528072e709e393243c81bded001d487a37af1dd5",
+      "status": 200,
+      "published_sha256": "0cf0e41545fcfd73cf8f418e528072e709e393243c81bded001d487a37af1dd5",
+      "matches_repository": true
+    },
+    "styles.css": {
+      "repository_sha256": "c2213a1739f0502179a9c0b557f602c3fa05bb9c65a72796cf2d74138d87de82",
+      "status": 200,
+      "published_sha256": "c2213a1739f0502179a9c0b557f602c3fa05bb9c65a72796cf2d74138d87de82",
+      "matches_repository": true
+    }
+  }
+}

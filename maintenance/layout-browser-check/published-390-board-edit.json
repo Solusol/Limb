@@ -1,0 +1,107 @@
+{
+  "source": "published",
+  "viewport": [
+    390,
+    844
+  ],
+  "route": "board/edit",
+  "errors": [],
+  "layout": {
+    "viewport": 390,
+    "documentWidth": 390,
+    "documentHeight": 3394,
+    "elements": {
+      ".site-header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 232,
+        "display": "grid",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#main": {
+        "x": 0,
+        "y": 232,
+        "width": 390,
+        "height": 3162.4375,
+        "display": "block",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#home": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#characters": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#bulletin-board": {
+        "x": 0,
+        "y": 232,
+        "width": 390,
+        "height": 3162.4375,
+        "display": "block",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#bulletin-board .bn-cork": {
+        "x": 0,
+        "y": 387.34375,
+        "width": 390,
+        "height": 3007.09375,
+        "display": "block",
+        "aspectRatio": "auto",
+        "backgroundSize": "100% 100%"
+      },
+      "#bn-board-view": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#bn-world": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "block",
+        "aspectRatio": "3 / 4",
+        "backgroundSize": "auto"
+      },
+      "#bn-world .bn-note": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "block",
+        "aspectRatio": "1 / 1.414",
+        "backgroundSize": "auto"
+      },
+      "#bn-editor": {
+        "x": 16,
+        "y": 503.34375,
+        "width": 358,
+        "height": 2875.09375,
+        "display": "grid",
+        "aspectRatio": "auto",
+        "backgroundSize": "100% 100%"
+      }
+    }
+  },
+  "ok": true
+}

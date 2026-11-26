@@ -1,0 +1,98 @@
+{
+  "source": "baseline",
+  "viewport": [
+    1440,
+    1000
+  ],
+  "route": "home",
+  "errors": [],
+  "layout": {
+    "viewport": 1440,
+    "documentWidth": 1440,
+    "documentHeight": 2686,
+    "elements": {
+      ".site-header": {
+        "x": 0,
+        "y": -120,
+        "width": 1440,
+        "height": 120,
+        "display": "grid",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#main": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 2565.515625,
+        "display": "block",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#home": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 2565.515625,
+        "display": "block",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#characters": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#bulletin-board": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#bulletin-board .bn-cork": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "block",
+        "aspectRatio": "3 / 4",
+        "backgroundSize": "100% 100%"
+      },
+      "#bn-board-view": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "flex",
+        "aspectRatio": "auto",
+        "backgroundSize": "auto"
+      },
+      "#bn-world": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "block",
+        "aspectRatio": "3 / 4",
+        "backgroundSize": "auto"
+      },
+      "#bn-editor": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none",
+        "aspectRatio": "auto",
+        "backgroundSize": "100% 100%"
+      }
+    }
+  },
+  "ok": true
+}
