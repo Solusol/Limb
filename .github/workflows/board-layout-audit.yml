@@ -1,0 +1,60 @@
+name: Board layout audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/board-layout-audit.yml']
+permissions:
+  contents: write
+concurrency:
+  group: board-layout-audit
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Check existing JavaScript syntax
+        run: node --check board.js
+      - name: Extract layout source without changing application files
+        shell: python
+        run: |
+          import hashlib, json, pathlib, subprocess
+          source = pathlib.Path('board.js').read_bytes()
+          text = source.decode('utf-8')
+          marker = '  function renderBoard()'
+          if text.count(marker) != 1:
+              raise SystemExit('Unexpected board.js structure; no report written')
+          tail = text[text.index(marker):]
+          if len(tail) > 60000:
+              raise SystemExit('Unexpected source size; no report written')
+          output = pathlib.Path('maintenance/board-layout-audit')
+          if output.exists():
+              raise SystemExit('Report directory already exists; refusing to overwrite')
+          output.mkdir(parents=True)
+          metadata = {
+              'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+              'source_path': 'board.js',
+              'source_sha256': hashlib.sha256(source).hexdigest(),
+              'source_git_blob': hashlib.sha1(b'blob ' + str(len(source)).encode() + b'\0' + source).hexdigest(),
+              'start_line': text[:text.index(marker)].count('\n') + 1,
+              'parts': []
+          }
+          for index, offset in enumerate(range(0, len(tail), 10000), 1):
+              name = f'part-{index:02}.txt'
+              (output / name).write_text(tail[offset:offset + 10000], encoding='utf-8')
+              metadata['parts'].append(name)
+          (output / 'metadata.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+      - name: Commit only the source report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- maintenance/board-layout-audit
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore: record board layout source for maintenance'
+          git push origin HEAD:main
