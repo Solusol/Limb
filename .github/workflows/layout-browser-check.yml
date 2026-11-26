@@ -1,0 +1,143 @@
+name: Layout browser check
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/layout-browser-check.yml']
+permissions:
+  contents: write
+concurrency:
+  group: layout-browser-check
+  cancel-in-progress: false
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser tools
+        run: |
+          python -m pip install playwright pillow
+          python -m playwright install --with-deps chromium
+      - name: Compare layouts without database writes
+        shell: python
+        run: |
+          import functools, hashlib, http.server, io, json, pathlib, subprocess, tempfile, threading, time, urllib.request
+          from PIL import Image
+          from playwright.sync_api import sync_playwright
+          root = pathlib.Path.cwd()
+          out = root / 'maintenance/layout-browser-check'
+          if out.exists():
+              raise SystemExit('Report already exists; refusing to overwrite')
+          out.mkdir(parents=True)
+          shots = pathlib.Path(tempfile.mkdtemp(prefix='limb-shots-'))
+          baseline = pathlib.Path(tempfile.mkdtemp(prefix='limb-base-')) / 'site'
+          ref = '7c6a6723691e87e382443663f5c71a29a8e1da20'
+          subprocess.run(['git', 'worktree', 'add', '--detach', str(baseline), ref], check=True)
+          def serve(directory, port):
+              handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(directory))
+              server = http.server.ThreadingHTTPServer(('127.0.0.1', port), handler)
+              threading.Thread(target=server.serve_forever, daemon=True).start()
+              return server
+          servers = [serve(baseline, 8091), serve(root, 8092)]
+          summary = {'baseline': ref, 'current': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(), 'images': {}, 'cases': [], 'comparisons': [], 'published_files': {}}
+          for name, directory in [('baseline', baseline), ('current', root)]:
+              summary['images'][name] = {}
+              for filename in ['doska-fon.webp', 'doska-fon.png']:
+                  path = directory / 'assets/doska' / filename
+                  if path.exists():
+                      with Image.open(path) as image:
+                          summary['images'][name][filename] = {'width': image.width, 'height': image.height, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+          for filename in ['index.html', 'board.js', 'board.css', 'styles.css']:
+              item = {'repository_sha256': hashlib.sha256((root / filename).read_bytes()).hexdigest()}
+              try:
+                  url = 'https://solusol.github.io/Limb/' + filename + '?layout-check=' + summary['current']
+                  with urllib.request.urlopen(url, timeout=30) as response:
+                      data = response.read()
+                      item.update({'status': response.status, 'published_sha256': hashlib.sha256(data).hexdigest()})
+                  item['matches_repository'] = item['published_sha256'] == item['repository_sha256']
+              except Exception as error:
+                  item['error'] = str(error)[:300]
+              summary['published_files'][filename] = item
+          measurements = {}
+          with sync_playwright() as p:
+              browser = p.chromium.launch()
+              for name, base in [('baseline', 'http://127.0.0.1:8091/'), ('current', 'http://127.0.0.1:8092/'), ('published', 'https://solusol.github.io/Limb/')]:
+                  for width, height in [(1440, 1000), (390, 844)]:
+                      context = browser.new_context(viewport={'width': width, 'height': height}, reduced_motion='reduce', service_workers='block')
+                      def route_request(route):
+                          request = route.request
+                          if request.method not in ('GET', 'HEAD'):
+                              route.abort()
+                          elif '/rest/v1/limb_board_notes' in request.url:
+                              rows = [{'id': 'layout-test-note', 'owner_id': 'test-only', 'x': 100, 'y': 100, 'width': 280, 'version': 1, 'payload': {'kind': 'note', 'paperId': 'test-only', 'ratio': 1.414, 'text': 'Layout test', 'font': 4.5, 'tx': 0.12, 'ty': 0.12, 'stickers': []}}]
+                              route.fulfill(status=200, content_type='application/json', body=json.dumps(rows), headers={'Access-Control-Allow-Origin': '*'})
+                          elif request.url.startswith(('http://127.0.0.1:8091/', 'http://127.0.0.1:8092/', 'https://solusol.github.io/Limb/')):
+                              route.continue_()
+                          else:
+                              route.abort()
+                      context.route('**/*', route_request)
+                      page = context.new_page()
+                      for fragment in ['home', 'characters', 'board', 'board/edit']:
+                          key = name + '-' + str(width) + '-' + fragment.replace('/', '-')
+                          result = {'source': name, 'viewport': [width, height], 'route': fragment, 'errors': []}
+                          def record_error(error):
+                              result['errors'].append(str(error)[:300])
+                          page.on('pageerror', record_error)
+                          try:
+                              page.goto(base + '?layout-check=' + summary['current'] + '#' + fragment, wait_until='load', timeout=60000)
+                              page.wait_for_timeout(2500)
+                              page.evaluate('document.fonts.ready')
+                              result['layout'] = page.evaluate('''() => {
+                                const selectors = ['.site-header', '#main', '#home', '#characters', '#bulletin-board', '#bulletin-board .bn-cork', '#bn-board-view', '#bn-world', '#bn-world .bn-note', '#bn-editor'];
+                                const result = {viewport: innerWidth, documentWidth: document.documentElement.scrollWidth, documentHeight: document.documentElement.scrollHeight, elements: {}};
+                                for (const selector of selectors) {
+                                  const element = document.querySelector(selector);
+                                  if (!element) continue;
+                                  const rect = element.getBoundingClientRect(), style = getComputedStyle(element);
+                                  result.elements[selector] = {x: rect.x, y: rect.y, width: rect.width, height: rect.height, display: style.display, aspectRatio: style.aspectRatio, backgroundSize: style.backgroundSize};
+                                }
+                                return result;
+                              }''')
+                              page.screenshot(path=str(shots / (key + '.png')), animations='disabled', timeout=30000)
+                              measurements[(name, width, fragment)] = result['layout']
+                              result['ok'] = True
+                          except Exception as error:
+                              result.update({'ok': False, 'error': str(error)[:600]})
+                          finally:
+                              page.remove_listener('pageerror', record_error)
+                          (out / (key + '.json')).write_text(json.dumps(result, indent=2), encoding='utf-8')
+                          summary['cases'].append({'file': key + '.json', 'ok': result['ok'], 'page_errors': len(result['errors'])})
+                      context.close()
+              browser.close()
+          for width in [1440, 390]:
+              for fragment in ['home', 'characters', 'board', 'board/edit']:
+                  a = measurements.get(('baseline', width, fragment))
+                  b = measurements.get(('current', width, fragment))
+                  if a is not None and b is not None:
+                      summary['comparisons'].append({'viewport': width, 'route': fragment, 'same_geometry': a == b})
+          (out / 'summary.json').write_text(json.dumps(summary, indent=2), encoding='utf-8')
+          with open(pathlib.Path(__import__('os').environ['GITHUB_ENV']), 'a') as env:
+              env.write('LAYOUT_SCREENSHOTS=' + str(shots) + '\n')
+          for server in servers:
+              server.shutdown()
+      - uses: actions/upload-artifact@v4
+        with:
+          name: layout-browser-screenshots
+          path: ${{ env.LAYOUT_SCREENSHOTS }}
+          retention-days: 7
+      - name: Commit diagnostic JSON only
+        run: |
+          set -euo pipefail
+          git add -- maintenance/layout-browser-check
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'test: record Chromium layout diagnostics'
+          git push origin HEAD:main
