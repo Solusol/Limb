@@ -1,0 +1,368 @@
+    button.dataset.paper = paper.id;
+    button.setAttribute("aria-label", `Выбрать бумагу ${paper.id}`);
+    button.setAttribute("aria-pressed", "false");
+    button.append(picture(paper.file));
+    button.addEventListener("click", () => choosePaper(paper));
+    $("bn-papers").append(button);
+  });
+
+  /* Стикеры добавляются только на бумагу */
+  stickers.forEach(sticker => {
+    const button = node("button", "bn-sticker-choice");
+    button.type = "button";
+    button.dataset.sticker = sticker.id;
+    button.setAttribute("aria-label", `Добавить стикер ${sticker.id}`);
+    button.setAttribute("aria-pressed", "false");
+    button.append(picture(sticker.file));
+
+    button.addEventListener("click", () => {
+      const p = state.draft?.payload;
+      if (!p) return;
+
+      if (p.stickers.length >= 8) {
+        status("На одной записке можно разместить до восьми стикеров.");
+        return;
+      }
+
+      endHistoryGroup();
+      remember();
+      endHistoryGroup();
+
+      const added = { id: sticker.id, x: 0.65, y: 0.12, w: 0.2 };
+      boundSticker(added, p.ratio);
+
+      p.kind = "note";
+      p.stickers.push(added);
+      state.part = p.stickers.length - 1;
+
+      renderPreview();
+    });
+
+    $("bn-stickers").append(button);
+  });
+
+  /* Текст: весь ввод до потери фокуса — один шаг */
+  $("bn-text").addEventListener("input", event => {
+    if (!state.draft) return;
+
+    remember("text");
+    state.draft.payload.text = event.target.value;
+    updatePreviewParts();
+  });
+
+  $("bn-text").addEventListener("blur", endHistoryGroup);
+
+  /* Ползунки: одно движение — один шаг */
+  [
+    ["bn-width", value => { state.draft.width = value; }],
+    ["bn-font", value => { state.draft.payload.font = value; }],
+    ["bn-sticker-size", value => {
+      const p = state.draft.payload;
+      const sticker = p.stickers[state.part];
+      if (!sticker) return;
+      sticker.w = value;
+      boundSticker(sticker, p.ratio);
+    }]
+  ].forEach(([id, apply]) => {
+    const input = $(id);
+
+    input.addEventListener("input", () => {
+      if (!state.draft) return;
+      if (id === "bn-sticker-size" && !Number.isInteger(state.part)) return;
+
+      remember(id);
+      apply(Number(input.value));
+      updatePreviewParts();
+    });
+
+    input.addEventListener("change", endHistoryGroup);
+    input.addEventListener("pointerup", endHistoryGroup);
+    input.addEventListener("blur", endHistoryGroup);
+  });
+
+  /* Перемещение текста и стикеров внутри бумаги */
+  let partDrag = null;
+
+  preview.addEventListener("pointerdown", event => {
+    if (event.button !== 0 || !state.draft) return;
+
+    const part = event.target.closest("[data-part]");
+    const note = preview.querySelector(".bn-note");
+    if (!part || !note) return;
+
+    endHistoryGroup();
+
+    state.part = part.dataset.part === "text"
+      ? "text"
+      : Number(part.dataset.part);
+
+    const p = state.draft.payload;
+    const sticker = Number.isInteger(state.part) ? p.stickers[state.part] : null;
+    if (state.part !== "text" && !sticker) return;
+
+    const rect = note.getBoundingClientRect();
+
+    partDrag = {
+      id: event.pointerId,
+      px: event.clientX,
+      py: event.clientY,
+      width: rect.width,
+      height: rect.height,
+      x: state.part === "text" ? p.tx : sticker.x,
+      y: state.part === "text" ? p.ty : sticker.y,
+      remembered: false
+    };
+
+    preview.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    updatePreviewParts();
+  });
+
+  preview.addEventListener("pointermove", event => {
+    if (!partDrag || partDrag.id !== event.pointerId || !state.draft) return;
+
+    const d = partDrag;
+    const dx = event.clientX - d.px;
+    const dy = event.clientY - d.py;
+
+    /* Простой щелчок только выбирает элемент и не попадает в историю */
+    if (!d.remembered) {
+      if (Math.abs(dx) + Math.abs(dy) < 3) return;
+      remember();
+      d.remembered = true;
+    }
+
+    const p = state.draft.payload;
+    const x = d.x + dx / d.width;
+    const y = d.y + dy / d.height;
+
+    if (state.part === "text") {
+      p.tx = clamp(x, 0, 0.24);
+      p.ty = clamp(y, 0, 0.26);
+    } else {
+      const sticker = p.stickers[state.part];
+      if (!sticker) return;
+      sticker.x = x;
+      sticker.y = y;
+      boundSticker(sticker, p.ratio);
+    }
+
+    updatePreviewParts();
+  });
+
+  ["pointerup", "pointercancel"].forEach(type => {
+    preview.addEventListener(type, () => {
+      partDrag = null;
+      endHistoryGroup();
+    });
+  });
+
+  function editorValid() {
+    const p = state.draft?.payload;
+    if (!p) return false;
+
+    if (!p.text.trim() && !p.stickers.length) {
+      status("Добавь текст или хотя бы один стикер на бумагу.");
+      return false;
+    }
+
+    const text = preview.querySelector(".bn-note-text");
+
+    if (
+      text &&
+      (text.scrollHeight > text.clientHeight + 2 ||
+       text.scrollWidth > text.clientWidth + 2)
+    ) {
+      status("Текст не помещается на бумаге. Уменьши шрифт или сократи записку.");
+      return false;
+    }
+
+    return true;
+  }
+
+  /* ---------- Переходы ---------- */
+
+  $("bn-new").addEventListener("click", () => {
+    if (state.writing) return;
+
+    try {
+      state.draft = freshDraft();
+    } catch (error) {
+      status(error.message);
+      return;
+    }
+
+    resetHistory();
+    state.part = "text";
+    state.placing = false;
+    state.selected = null;
+    $("bn-text").value = "";
+
+    location.hash = "#board/edit";
+    choosePaper(papers[0], false);
+    status("Выбери бумагу, добавь текст и стикеры.");
+  });
+
+  $("bn-place").addEventListener("click", async () => {
+    if (!state.draft || state.writing) return;
+
+    endHistoryGroup();
+
+    if (document.fonts?.ready) await document.fonts.ready;
+    if (!state.draft || !editorValid()) return;
+
+    state.draft.payload.kind = "note";
+    state.placing = true;
+    state.editing = false;
+    state.selected = state.draft.id;
+    bounded(state.draft);
+
+    if (location.hash === "#board") syncRoute();
+    else location.hash = "#board";
+
+    status(
+      "Перетащи записку на нужное место. " +
+      "Другие посетители увидят её только после публикации."
+    );
+  });
+
+  $("bn-publish").addEventListener("click", async () => {
+    if (!state.draft || state.writing) return;
+
+    const draft = state.draft;
+
+    invalidateLoading();
+    state.writing = true;
+    syncToolbar();
+
+    try {
+      if (!configured()) {
+        bounded(draft);
+        state.rows.push({
+          ...clone(draft),
+          owner_id: "local-preview",
+          version: 1,
+          created_at: new Date().toISOString()
+        });
+        state.draft = null;
+        state.placing = false;
+        state.selected = null;
+        state.part = "text";
+        resetHistory();
+        status(
+          "Записка размещена только в этой вкладке до перезагрузки. " +
+          "Для общей публикации подключи Supabase."
+        );
+        return;
+      }
+
+      await signIn();
+
+      bounded(draft);
+      draft.payload.kind = "note";
+
+      /* Один id на черновик: повторная попытка не создаёт копию */
+      const existing = await request(`?id=eq.${draft.id}&select=id,owner_id`);
+
+      if (existing?.length) {
+        if (existing[0].owner_id !== state.session.userId) {
+          throw new Error("Не удалось подтвердить авторство записки.");
+        }
+      } else {
+        await request("", "POST", {
+          id: draft.id,
+          x: draft.x,
+          y: draft.y,
+          width: draft.width,
+          payload: clone(draft.payload)
+        });
+      }
+
+      state.draft = null;
+      state.placing = false;
+      state.selected = null;
+      state.part = "text";
+      resetHistory();
+
+      status("Опубликовано. Записка сохранена в общей базе.");
+    } catch (error) {
+      status(
+        `${error.message} Черновик сохранён — можно повторить публикацию.`
+      );
+    } finally {
+      state.writing = false;
+      renderBoard();
+      await loadBoard();
+    }
+  });
+
+  function syncRoute() {
+    const parts = location.hash.slice(1).split("/");
+    const active = parts[0] === "board";
+
+    page.hidden = !active;
+
+    if (!active) {
+      if (reader.open) reader.close();
+      return;
+    }
+
+    document.querySelectorAll("#main .page").forEach(section => {
+      section.hidden = section !== page;
+    });
+
+    document.body.dataset.page = "board";
+    document.title = "Лимб — Доска объявлений";
+
+    document.querySelectorAll(".site-header nav a").forEach(link => {
+      if (link.hash === "#board") link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    });
+
+    const isEditor = parts[1] === "edit";
+
+    $("bn-board-view").hidden = isEditor;
+    editor.hidden = !isEditor;
+
+    if (isEditor) {
+      if (!state.draft) {
+        try {
+          state.draft = freshDraft();
+          resetHistory();
+        } catch (error) {
+          status(error.message);
+          editor.hidden = true;
+          $("bn-board-view").hidden = false;
+          return;
+        }
+      }
+
+      /* При возврате в редактор черновик снова не размещается */
+      state.placing = false;
+      state.draft.payload.kind = "note";
+      $("bn-text").value = state.draft.payload.text;
+
+      renderPreview();
+      setupCaptcha().catch(error => status(error.message));
+    } else {
+      renderBoard();
+      loadBoard();
+    }
+  }
+
+  window.addEventListener("hashchange", syncRoute);
+
+  setInterval(() => {
+    if (!page.hidden && !document.hidden && editor.hidden && configured()) {
+      loadBoard();
+    }
+  }, 20000);
+
+  status(
+    configured()
+      ? "Записки сохраняются в общей базе. Не публикуй личные данные."
+      : "Оформление доступно. Для общей публикации заполни Supabase в board-config.js."
+  );
+
+  syncRoute();
+})();

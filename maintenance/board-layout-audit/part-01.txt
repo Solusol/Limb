@@ -1,0 +1,390 @@
+  function renderBoard() {
+    world.replaceChildren();
+
+    const rows = state.placing && state.draft
+      ? [...state.rows, state.draft]
+      : state.rows;
+
+    rows.forEach(row => {
+      const isDraft = state.placing && row === state.draft;
+      const movable = Boolean(isDraft || (state.editing && mine(row)));
+      const note = renderNote(row);
+
+      note.dataset.id = row.id;
+      note.tabIndex = 0;
+      note.setAttribute(
+        "aria-label",
+        isDraft
+          ? "Неопубликованная записка"
+          : row.payload.kind === "sticker"
+            ? "Стикер"
+            : `Записка: ${row.payload.text.slice(0, 70)}`
+      );
+
+      note.style.left = `${row.x / W * 100}%`;
+      note.style.top = `${row.y / H * 100}%`;
+      note.style.width = `${row.width / W * 100}%`;
+
+      note.classList.toggle("draft", isDraft);
+      note.classList.toggle("movable", movable);
+      note.classList.toggle("selected", state.selected === row.id);
+
+      note.addEventListener("click", () => {
+        if (Date.now() < state.suppressClickUntil) return;
+        if (!movable) showRead(row);
+      });
+
+      note.addEventListener("keydown", event => {
+        if (event.key === "Enter" && !movable) {
+          event.preventDefault();
+          showRead(row);
+        }
+      });
+
+      world.append(note);
+    });
+
+    syncToolbar();
+  }
+
+  function invalidateLoading() {
+    state.loadSequence++;
+  }
+
+  async function loadBoard() {
+    if (!configured()) return;
+
+    if (state.dragging || state.writing) return;
+
+    const sequence = ++state.loadSequence;
+
+    try {
+      const rows = await request(
+        "?select=id,owner_id,x,y,width,payload,version,created_at" +
+        "&order=created_at.asc&limit=500"
+      );
+
+      if (sequence !== state.loadSequence || state.dragging || state.writing) {
+        return;
+      }
+
+      state.rows = Array.isArray(rows) ? rows : [];
+      renderBoard();
+    } catch (error) {
+      if (sequence === state.loadSequence) status(error.message);
+    }
+  }
+
+  async function savePosition(row) {
+    if (!mine(row) || state.writing) return;
+
+    invalidateLoading();
+    state.writing = true;
+    syncToolbar();
+
+    try {
+      const updated = await request(
+        `?id=eq.${row.id}&version=eq.${row.version}`,
+        "PATCH",
+        { x: row.x, y: row.y }
+      );
+
+      if (!updated?.length) {
+        throw new Error("Записка уже изменилась. Обнови страницу.");
+      }
+
+      Object.assign(row, updated[0]);
+      status("Положение сохранено для всех посетителей.");
+    } catch (error) {
+      status(error.message);
+    } finally {
+      state.writing = false;
+      syncToolbar();
+      await loadBoard();
+    }
+  }
+
+  /* Перемещение записки по доске */
+  let boardDrag = null;
+
+  world.addEventListener("pointerdown", event => {
+    if (event.button !== 0 || state.writing) return;
+
+    const item = event.target.closest(".bn-note.movable");
+    if (!item) return;
+
+    const row = state.placing && item.dataset.id === state.draft?.id
+      ? state.draft
+      : state.rows.find(n => n.id === item.dataset.id);
+
+    if (!row) return;
+
+    invalidateLoading();
+    state.dragging = true;
+    state.selected = row.id;
+
+    const rect = world.getBoundingClientRect();
+
+    boardDrag = {
+      row,
+      item,
+      id: event.pointerId,
+      px: event.clientX,
+      py: event.clientY,
+      x: row.x,
+      y: row.y,
+      sx: W / rect.width,
+      sy: H / rect.height,
+      moved: false
+    };
+
+    world.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  });
+
+  world.addEventListener("pointermove", event => {
+    if (!boardDrag || boardDrag.id !== event.pointerId) return;
+
+    const d = boardDrag;
+    const dx = event.clientX - d.px;
+    const dy = event.clientY - d.py;
+
+    if (Math.abs(dx) + Math.abs(dy) > 4) d.moved = true;
+
+    d.row.x = d.x + dx * d.sx;
+    d.row.y = d.y + dy * d.sy;
+    bounded(d.row);
+
+    d.item.style.left = `${d.row.x / W * 100}%`;
+    d.item.style.top = `${d.row.y / H * 100}%`;
+  });
+
+  world.addEventListener("pointerup", async event => {
+    if (!boardDrag || boardDrag.id !== event.pointerId) return;
+
+    const d = boardDrag;
+    boardDrag = null;
+    state.dragging = false;
+
+    if (d.moved) {
+      state.suppressClickUntil = Date.now() + 300;
+      if (d.row !== state.draft) await savePosition(d.row);
+    }
+  });
+
+  world.addEventListener("pointercancel", () => {
+    if (boardDrag) {
+      boardDrag.row.x = boardDrag.x;
+      boardDrag.row.y = boardDrag.y;
+    }
+
+    boardDrag = null;
+    state.dragging = false;
+    renderBoard();
+  });
+
+  /* ---------- История действий редактора ---------- */
+
+  /*
+   * Сохраняет состояние перед изменением.
+   * key объединяет серию изменений в один шаг:
+   * одно движение ползунка, одно перетаскивание,
+   * один период ввода текста.
+   */
+  function remember(key = null) {
+    if (!state.draft) return;
+    if (key && state.historyKey === key) return;
+
+    state.future = [];
+    state.history.push({
+      draft: clone(state.draft),
+      part: state.part
+    });
+
+    if (state.history.length > 100) state.history.shift();
+
+    state.historyKey = key;
+    updateControls();
+  }
+
+  function endHistoryGroup() {
+    state.historyKey = null;
+  }
+
+  function resetHistory() {
+    state.history = [];
+    state.future = [];
+    state.historyKey = null;
+  }
+
+  function undo() {
+    if (!state.draft || state.writing) return;
+
+    const previous = state.history.pop();
+    endHistoryGroup();
+
+    if (!previous) {
+      updateControls();
+      return;
+    }
+
+    state.future.push({ draft: clone(state.draft), part: state.part });
+    partDrag = null;
+    state.draft = previous.draft;
+    state.part = previous.part;
+    $("bn-text").value = state.draft.payload.text;
+
+    renderPreview();
+    status("Последнее действие отменено.");
+  }
+
+  function redo() {
+    if (!state.draft || state.writing) return;
+    const next = state.future.pop();
+    endHistoryGroup();
+    if (!next) {
+      updateControls();
+      return;
+    }
+    state.history.push({ draft: clone(state.draft), part: state.part });
+    if (state.history.length > 100) state.history.shift();
+    partDrag = null;
+    state.draft = next.draft;
+    state.part = next.part;
+    $("bn-text").value = state.draft.payload.text;
+    renderPreview();
+    status("Отменённое действие повторено.");
+  }
+
+  $("bn-cancel").addEventListener("click", undo);
+  $("bn-redo").addEventListener("click", redo);
+
+  /* ---------- Редактор ---------- */
+
+  function updateControls() {
+    const draft = state.draft;
+    if (!draft) return;
+
+    $("bn-width").value = draft.width;
+    $("bn-font").value = draft.payload.font;
+
+    const selected = Number.isInteger(state.part)
+      ? draft.payload.stickers[state.part]
+      : null;
+
+    $("bn-sticker-size").disabled = !selected;
+    if (selected) $("bn-sticker-size").value = selected.w;
+
+    $("bn-cancel").disabled = state.writing || state.history.length === 0;
+    $("bn-redo").disabled = state.writing || state.future.length === 0;
+
+    $("bn-papers").querySelectorAll("button").forEach(button => {
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.paper === draft.payload.paperId)
+      );
+    });
+
+    $("bn-stickers").querySelectorAll("button").forEach(button => {
+      button.setAttribute(
+        "aria-pressed",
+        String(Boolean(selected && button.dataset.sticker === selected.id))
+      );
+    });
+  }
+
+  function updatePreviewParts() {
+    const draft = state.draft;
+    const note = preview.querySelector(".bn-note");
+    if (!draft || !note) return;
+
+    const p = draft.payload;
+
+    note.style.aspectRatio = `1 / ${p.ratio}`;
+    note.style.width = `${draft.width / 420 * 100}%`;
+    note.style.setProperty("--bn-font", p.font);
+
+    const text = note.querySelector(".bn-note-text");
+
+    if (text) {
+      text.textContent = p.text;
+      text.style.left = `${p.tx * 100}%`;
+      text.style.top = `${p.ty * 100}%`;
+    }
+
+    note.querySelectorAll("[data-part]").forEach(part => {
+      const key = part.dataset.part;
+      const active = key === "text"
+        ? state.part === "text"
+        : state.part === Number(key);
+
+      part.classList.toggle("bn-active-part", active);
+
+      if (key !== "text") {
+        const sticker = p.stickers[Number(key)];
+        if (!sticker) return;
+
+        part.style.left = `${sticker.x * 100}%`;
+        part.style.top = `${sticker.y * 100}%`;
+        part.style.width = `${sticker.w * 100}%`;
+      }
+    });
+
+    updateControls();
+  }
+
+  function renderPreview() {
+    if (!state.draft) return;
+
+    const note = renderNote(state.draft, true);
+    note.classList.add("bn-preview");
+    note.style.width = `${state.draft.width / 420 * 100}%`;
+
+    preview.replaceChildren(note);
+    updateControls();
+  }
+
+  function choosePaper(paper, withHistory = true) {
+    const draft = state.draft;
+    if (!draft || !paper) return;
+    if (withHistory && draft.payload.paperId === paper.id) return;
+
+    if (withHistory) {
+      endHistoryGroup();
+      remember();
+      endHistoryGroup();
+    }
+
+    draft.payload.kind = "note";
+    draft.payload.paperId = paper.id;
+    draft.payload.ratio = paperRatios.get(paper.id) ||
+      clamp(paper.ratio || 1.414, 0.45, 1.8);
+
+    draft.payload.stickers.forEach(s => boundSticker(s, draft.payload.ratio));
+    renderPreview();
+
+    if (paperRatios.has(paper.id)) return;
+
+    const img = new Image();
+
+    img.onload = () => {
+      const ratio = clamp(img.naturalHeight / img.naturalWidth, 0.45, 1.8);
+      paperRatios.set(paper.id, ratio);
+
+      if (state.draft !== draft || draft.payload.paperId !== paper.id) return;
+
+      draft.payload.ratio = ratio;
+      draft.payload.stickers.forEach(s => boundSticker(s, ratio));
+      renderPreview();
+    };
+
+    img.onerror = () => {
+      status(`Не найдена бумага: ${asset(paper.file)}.`);
+    };
+
+    img.src = asset(paper.file);
+  }
+
+  papers.forEach(paper => {
+    const button = node("button", "bn-paper-choice");
+    button.type = "button";

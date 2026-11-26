@@ -1,0 +1,11 @@
+{
+  "source_commit": "b699a7a29d272896a6fda85e72e2dbdb846dc172",
+  "source_path": "board.js",
+  "source_sha256": "0362d85b5cf6770caf1825bdf209719494a0469dbdb5ba5b1a60e34eb2ba0ee7",
+  "source_git_blob": "db85fabb967dbd658306963ff5efa77bf5af5f92",
+  "start_line": 1012,
+  "parts": [
+    "part-01.txt",
+    "part-02.txt"
+  ]
+}
