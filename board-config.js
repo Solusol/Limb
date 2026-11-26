@@ -12,6 +12,9 @@ window.LIMB_BOARD = {
   assets: {
     background: "doska-fon.webp",
 
+    /* Фон доски для повторения вниз: doska-fon.webp со сглаженным стыком между повторами */
+    backgroundTile: "doska-fon-tile.webp",
+
     /* Красная фактура редактора */
     panel: "fon.webp",
 

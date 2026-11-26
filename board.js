@@ -16,10 +16,11 @@
   }
 
   const W = 1200;
-  const H = 1600;
+  /* Высота доски: втрое больше прежних 1600. Старые координаты записок не меняются. */
+  const H = 4800;
 
   const ART = {
-    background: C.assets?.background || "doska-fon.webp",
+    background: C.assets?.backgroundTile || "doska-fon-tile.webp",
     panel: "fon.webp",
     textField: "fon-tekst.webp",
     paperHeading: C.assets?.paperHeading || "bumaga.webp",
@@ -1140,40 +1141,80 @@
       row,
       item,
       id: event.pointerId,
-      px: event.clientX,
-      py: event.clientY,
+      /* Точка захвата в координатах доски, а не окна:
+         так записка не отстаёт, если страница прокручивается во время переноса */
+      wx: event.clientX - rect.left,
+      wy: event.clientY - rect.top,
+      cx: event.clientX,
+      cy: event.clientY,
       x: row.x,
       y: row.y,
-      sx: W / rect.width,
-      sy: H / rect.height,
-      moved: false
+      moved: false,
+      raf: 0
     };
 
     world.setPointerCapture(event.pointerId);
     event.preventDefault();
   });
 
-  world.addEventListener("pointermove", event => {
-    if (!boardDrag || boardDrag.id !== event.pointerId) return;
-
+  function applyBoardDrag() {
     const d = boardDrag;
-    const dx = event.clientX - d.px;
-    const dy = event.clientY - d.py;
+    if (!d) return;
+
+    const rect = world.getBoundingClientRect();
+    const dx = d.cx - rect.left - d.wx;
+    const dy = d.cy - rect.top - d.wy;
 
     if (Math.abs(dx) + Math.abs(dy) > 4) d.moved = true;
 
-    d.row.x = d.x + dx * d.sx;
-    d.row.y = d.y + dy * d.sy;
+    d.row.x = d.x + dx * W / rect.width;
+    d.row.y = d.y + dy * H / rect.height;
     bounded(d.row);
 
     d.item.style.left = `${d.row.x / W * 100}%`;
     d.item.style.top = `${d.row.y / H * 100}%`;
+  }
+
+  /* Доска выше экрана: у края окна страница сама прокручивается */
+  function dragAutoScroll() {
+    const d = boardDrag;
+    if (!d) return;
+
+    const edge = Math.min(90, innerHeight * 0.15);
+    let step = 0;
+
+    if (d.cy < edge) step = -Math.ceil((edge - d.cy) / 4);
+    else if (d.cy > innerHeight - edge) step = Math.ceil((d.cy - innerHeight + edge) / 4);
+
+    if (step) {
+      window.scrollBy(0, step);
+      applyBoardDrag();
+      d.raf = requestAnimationFrame(dragAutoScroll);
+    } else {
+      d.raf = 0;
+    }
+  }
+
+  world.addEventListener("pointermove", event => {
+    if (!boardDrag || boardDrag.id !== event.pointerId) return;
+
+    const d = boardDrag;
+    d.cx = event.clientX;
+    d.cy = event.clientY;
+    applyBoardDrag();
+
+    if (!d.raf) d.raf = requestAnimationFrame(dragAutoScroll);
   });
+
+  window.addEventListener("scroll", () => {
+    if (boardDrag) applyBoardDrag();
+  }, { passive: true });
 
   world.addEventListener("pointerup", async event => {
     if (!boardDrag || boardDrag.id !== event.pointerId) return;
 
     const d = boardDrag;
+    if (d.raf) cancelAnimationFrame(d.raf);
     boardDrag = null;
     state.dragging = false;
 
@@ -1185,6 +1226,7 @@
 
   world.addEventListener("pointercancel", () => {
     if (boardDrag) {
+      if (boardDrag.raf) cancelAnimationFrame(boardDrag.raf);
       boardDrag.row.x = boardDrag.x;
       boardDrag.row.y = boardDrag.y;
     }
@@ -1604,6 +1646,25 @@
     status("Выбери бумагу, добавь текст и стикеры.");
   });
 
+  /* Новая записка появляется ниже уже опубликованных, на свободном месте */
+  function placeDraftInFreeSpace(draft) {
+    const h = draft.width * draft.payload.ratio;
+    const bottom = state.rows.reduce((max, row) => {
+      const rh = row.width * (Number(row.payload?.ratio) || 1);
+      return Math.max(max, (Number(row.y) || 0) + rh);
+    }, 0);
+
+    draft.x = (W - draft.width) / 2;
+    draft.y = Math.min(bottom + 40, H - h);
+  }
+
+  function showDraftOnBoard() {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const note = world.querySelector(".bn-note.draft");
+      note?.scrollIntoView({ block: "center", behavior: "smooth" });
+    }));
+  }
+
   $("bn-place").addEventListener("click", async () => {
     if (!state.draft || state.writing) return;
 
@@ -1616,10 +1677,13 @@
     state.placing = true;
     state.editing = false;
     state.selected = state.draft.id;
+    placeDraftInFreeSpace(state.draft);
     bounded(state.draft);
 
     if (location.hash === "#board") syncRoute();
     else location.hash = "#board";
+
+    showDraftOnBoard();
 
     status(
       "Перетащи записку на нужное место. " +

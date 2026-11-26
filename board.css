@@ -1320,3 +1320,46 @@ input[type="range"]:focus-visible {
   outline: 1px dashed #516D79;
   outline-offset: 4px;
 }
+/* ===== Длинная доска (1200 × 4800) =====
+   Фон больше не вписывается в одну картинку с пропорциями 3 : 4,
+   поэтому не растягивается. Пробковая текстура повторяется вниз
+   в своём масштабе, а высота доски определяется полем записок. */
+
+#bulletin-board .bn-cork {
+  aspect-ratio: auto;
+  height: auto;
+  background-repeat: repeat-y;
+  background-position: center top;
+  background-size: 100% auto;
+}
+
+#bulletin-board #bn-board-view {
+  position: relative;
+  inset: auto;
+  height: auto;
+}
+
+#bulletin-board #bn-board-view[hidden] {
+  display: none !important;
+}
+
+#bulletin-board #bn-board-view > .bn-scroll {
+  flex: 0 0 auto;
+}
+
+#bulletin-board .bn-world {
+  aspect-ratio: 1 / 4;
+}
+
+/* Кнопки «Оставить записку» / «Опубликовать» остаются под рукой
+   при прокрутке длинной доски и не перекрывают записки */
+#bulletin-board #bn-board-view > .bn-toolbar {
+  position: sticky;
+  top: 12px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+#bulletin-board #bn-board-view > .bn-toolbar > * {
+  pointer-events: auto;
+}
