@@ -22,22 +22,24 @@
   cursor: pointer;
   transform: translate(-50%, -100%);
   transform-origin: 50% 100%;
-  transition: transform .18s ease, filter .18s ease;
   z-index: 2;
 }
 
-#house .house-pin img {
+#house .house-pin-icon {
   display: block;
   width: 100%;
-  height: auto;
+  aspect-ratio: 41 / 55;
+  background-color: #723424;
+  -webkit-mask: url("./assets/karta_dom/Пин.png") center / contain no-repeat;
+  mask: url("./assets/karta_dom/Пин.png") center / contain no-repeat;
+  transition: background-color .18s ease;
   pointer-events: none;
-  user-select: none;
 }
 
-#house .house-pin:hover,
-#house .house-pin:focus-visible {
-  transform: translate(-50%, -100%) scale(1.15);
-  filter: brightness(1.15);
+/* При наведении пин становится зелёным — стандартный цвет наведения сайта */
+#house .house-pin:hover .house-pin-icon,
+#house .house-pin:focus-visible .house-pin-icon {
+  background-color: var(--limb-hover, #5d6444);
 }
 
 #house .house-pin:focus { outline: none; }
@@ -71,10 +73,18 @@
 
 #house-plan:focus { outline: none; }
 
+#house-plan .house-plan-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
 #house-plan .house-plan-close {
   display: block;
+  flex: 0 0 auto;
   min-height: 44px;
-  margin-left: auto;
   padding: 8px 16px;
   color: inherit;
   font-family: "Beer Money", cursive;
@@ -94,7 +104,7 @@
 }
 
 #house-plan .house-plan-title {
-  margin: 0 0 6px;
+  margin: 0;
   font-family: "Beer Money", cursive;
   font-weight: 400;
   font-size: clamp(24px, 3vw, 36px);
@@ -102,30 +112,12 @@
   color: #eee7d5;
 }
 
-#house-plan .house-plan-note {
-  margin: 0 0 16px;
-  font-family: "Beer Money", cursive;
-  font-size: clamp(16px, 1.6vw, 20px);
-  line-height: 1.4;
-}
-
-/* Схема целиком помещается в окно; по нажатию — крупнее, с прокруткой */
 #house-plan .house-plan-image {
   display: block;
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  max-height: calc(92dvh - 230px);
-  margin: 0 auto;
-  cursor: zoom-in;
-}
-
-#house-plan .house-plan-image.zoomed {
   width: 100%;
-  max-height: none;
-  cursor: zoom-out;
+  height: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #house .house-pin { transition: none; }
+  #house .house-pin-icon { transition: none; }
 }

@@ -10,13 +10,13 @@
   const BASE = "assets/karta_dom/";
 
   const FLOORS = [
-    { id: "roof",  title: "Крыша",            note: "Наблюдательный пост, сушка белья, огород.", file: "Крыша.webp",  x: 25.6, y: 8.6 },
-    { id: "attic", title: "Этаж 5 (чердак)",  note: "Общая комната с проектором, штаб.",          file: "Чердак.webp", x: 32.4, y: 15.0 },
-    { id: "f4",    title: "Этаж 4",           note: "Комнаты Чанбина и Черён, Чана и Феликса, Йеджи и Рюджин, Лии и Юны.", file: "Этаж 4.webp", x: 35.1, y: 26.3 },
-    { id: "f3",    title: "Этаж 3",           note: "Комнаты Джисона и Чонина, Хёнджина, Сынмина и Минхо, тренировочный зал.", file: "Этаж 3.webp", x: 35.9, y: 36.0 },
-    { id: "f2",    title: "Этаж 2",           note: "Общая комната, кухня и столовая, кладовая, медицинский блок.", file: "Этаж 2.webp", x: 36.3, y: 47.2 },
-    { id: "f1",    title: "Этаж 1",           note: "Гараж, мастерская.",                          file: "Этаж 1.webp", x: 35.5, y: 84.2 },
-    { id: "f0",    title: "Этаж 0",           note: "Генератор, склад, оружейная.",                file: "Этаж 0.webp", x: 4.2,  y: 90.9 }
+    { id: "roof",  title: "Крыша",           file: "Крыша.webp",  x: 25.6, y: 8.6 },
+    { id: "attic", title: "Этаж 5 (чердак)", file: "Чердак.webp", x: 32.4, y: 15.0 },
+    { id: "f4",    title: "Этаж 4",          file: "Этаж 4.webp", x: 35.1, y: 26.3 },
+    { id: "f3",    title: "Этаж 3",          file: "Этаж 3.webp", x: 35.9, y: 36.0 },
+    { id: "f2",    title: "Этаж 2",          file: "Этаж 2.webp", x: 36.3, y: 47.2 },
+    { id: "f1",    title: "Этаж 1",          file: "Этаж 1.webp", x: 35.5, y: 84.2 },
+    { id: "f0",    title: "Этаж 0",          file: "Этаж 0.webp", x: 4.2,  y: 90.9 }
   ];
 
   const src = file => encodeURI(BASE + file);
@@ -47,20 +47,16 @@
     title.id = "house-plan-title";
     title.className = "house-plan-title";
 
-    const note = document.createElement("p");
-    note.className = "house-plan-note";
-
     const plan = document.createElement("img");
     plan.className = "house-plan-image";
     plan.decoding = "async";
 
-    plan.title = "Нажми, чтобы увеличить";
-    plan.addEventListener("click", () => {
-      const z = plan.classList.toggle("zoomed");
-      plan.title = z ? "Нажми, чтобы уменьшить" : "Нажми, чтобы увеличить";
-    });
+    /* Название этажа и «Закрыть» — в одной строке наверху окна */
+    const head = document.createElement("div");
+    head.className = "house-plan-head";
+    head.append(title, close);
 
-    dialog.append(close, title, note, plan);
+    dialog.append(head, plan);
     document.body.append(dialog);
 
     /* Клик по затемнению вокруг окна тоже закрывает его */
@@ -77,18 +73,15 @@
       pin.title = floor.title;
       pin.setAttribute("aria-label", "Открыть схему: " + floor.title);
 
-      const icon = document.createElement("img");
-      icon.src = src("Пин.png");
-      icon.alt = "";
-      icon.draggable = false;
+      /* Пин — маска из Пин.png: цвет меняется при наведении */
+      const icon = document.createElement("span");
+      icon.className = "house-pin-icon";
+      icon.setAttribute("aria-hidden", "true");
       pin.append(icon);
 
       pin.addEventListener("click", () => {
         title.textContent = floor.title;
-        note.textContent = floor.note;
         plan.alt = "Схема: " + floor.title;
-        plan.classList.remove("zoomed");
-        plan.title = "Нажми, чтобы увеличить";
         plan.src = src(floor.file);
         if (!dialog.open) dialog.showModal();
         close.focus();
