@@ -54,6 +54,8 @@
   width: min(1180px, calc(100% - 32px));
   max-height: 92dvh;
   overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   margin: auto;
   padding: clamp(16px, 3vw, 32px);
   color: #eee7d5;
@@ -121,3 +123,5 @@
 @media (prefers-reduced-motion: reduce) {
   #house .house-pin-icon { transition: none; }
 }
+
+#house-plan::-webkit-scrollbar { display: none; width: 0; height: 0; }
