@@ -556,6 +556,7 @@
 
   function bindDynamic() {
     watchDialog(document.getElementById("bn-reader"), "paperOpen", "paperClose");
+    watchDialog(document.getElementById("house-plan"), "paperOpen", "paperClose");
     watchDialog(document.getElementById("cc-icons"), "clickSoft", "clickSoft");
     watchBoardStatus(document.getElementById("bn-status"));
   }

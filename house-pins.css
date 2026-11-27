@@ -1,0 +1,131 @@
+/* ===== Пины на «Карте Дома» ===== */
+
+#house .house-pins {
+  position: relative;
+  width: 100%;
+}
+
+#house .house-pins > img#house-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Кончик пина стоит ровно в точке координат */
+#house .house-pin {
+  position: absolute;
+  width: clamp(22px, 3.2%, 48px);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: translate(-50%, -100%);
+  transform-origin: 50% 100%;
+  transition: transform .18s ease, filter .18s ease;
+  z-index: 2;
+}
+
+#house .house-pin img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+#house .house-pin:hover,
+#house .house-pin:focus-visible {
+  transform: translate(-50%, -100%) scale(1.15);
+  filter: brightness(1.15);
+}
+
+#house .house-pin:focus { outline: none; }
+
+#house .house-pin:focus-visible {
+  outline: 1px dashed #eee7d5;
+  outline-offset: 3px;
+}
+
+/* Окно со схемой — та же красная плашка, что у записок на доске */
+#house-plan {
+  width: min(1180px, calc(100% - 32px));
+  max-height: 92dvh;
+  overflow: auto;
+  margin: auto;
+  padding: clamp(16px, 3vw, 32px);
+  color: #eee7d5;
+  background-color: #793b29;
+  background-image: url("./assets/doska/fon.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#house-plan::backdrop {
+  background: rgb(0 0 0 / 80%);
+}
+
+#house-plan:focus { outline: none; }
+
+#house-plan .house-plan-close {
+  display: block;
+  min-height: 44px;
+  margin-left: auto;
+  padding: 8px 16px;
+  color: inherit;
+  font-family: "Beer Money", cursive;
+  font-weight: 400;
+  font-size: 20px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+#house-plan .house-plan-close:focus:not(:focus-visible) { outline: none; }
+
+#house-plan .house-plan-close:focus-visible {
+  outline: 1px dashed #516D79;
+  outline-offset: 4px;
+}
+
+#house-plan .house-plan-title {
+  margin: 0 0 6px;
+  font-family: "Beer Money", cursive;
+  font-weight: 400;
+  font-size: clamp(24px, 3vw, 36px);
+  letter-spacing: .06em;
+  color: #eee7d5;
+}
+
+#house-plan .house-plan-note {
+  margin: 0 0 16px;
+  font-family: "Beer Money", cursive;
+  font-size: clamp(16px, 1.6vw, 20px);
+  line-height: 1.4;
+}
+
+/* Схема целиком помещается в окно; по нажатию — крупнее, с прокруткой */
+#house-plan .house-plan-image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: calc(92dvh - 230px);
+  margin: 0 auto;
+  cursor: zoom-in;
+}
+
+#house-plan .house-plan-image.zoomed {
+  width: 100%;
+  max-height: none;
+  cursor: zoom-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #house .house-pin { transition: none; }
+}
